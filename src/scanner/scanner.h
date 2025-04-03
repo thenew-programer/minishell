@@ -1,0 +1,59 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   scanner.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ybouryal <ybouryal@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/30 05:43:48 by ybouryal          #+#    #+#             */
+/*   Updated: 2025/03/30 06:18:28 by ybouryal         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef SCANNER_H
+# define SCANNER_H
+
+# include "../libft.h"
+
+typedef enum e_token_type
+{
+	TOKEN_LEFT_PAREN, TOKEN_RIGHT_PAREN,
+	TOKEN_LEFT_SBRACE, TOKEN_RIGHT_SBRACE,
+	TOKEN_LEFT_CBRACE, TOKEN_RIGHT_CBRACE,
+	TOKEN_REDIR_RIGHT, TOKEN_REDIR_LEFT,
+	TOKEN_APPEND, TOKEN_HEREDOC,
+	TOKEN_AND_AND, TOKEN_OR,
+	TOKEN_AND, TOKEN_PIPE,
+	TOKEN_SEMICOLAN, TOKEN_EQUAL,
+	TOKEN_SQ_WORD, TOKEN_DQ_WORD,
+	TOKEN_WORD, TOKEN_NBR,
+	TOKEN_ERROR,
+	TOKEN_EOF
+}	t_token_type;
+
+typedef struct s_token
+{
+	t_token_type	type;
+	const char		*start;
+	int				len;
+	int				line;
+}	t_token;
+
+typedef struct s_scanner
+{
+	const char	*start;
+	const char	*curr;
+	int			line;
+}	t_scanner;
+
+void	init_scanner(t_scanner *scanner, const char *src);
+t_token	scan_token(t_scanner *scanner);
+int		advance(t_scanner *scanner);
+int		peek(t_scanner *scanner);
+int		peek_next(t_scanner *scanner);
+int		is_atend(t_scanner *scanner);
+int		match(t_scanner *scanner, char c);
+void	skip_whitespace(t_scanner *scanner);
+int		is_alpha(int c);
+
+#endif /* SCANNER_H */
