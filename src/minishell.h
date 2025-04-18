@@ -15,5 +15,6 @@
 
 # include "parser/parser.h"
 # include "scanner/scanner.h"
+# include <readline/readline.h>
 
 #endif /* MINISHELL_H */
