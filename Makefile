@@ -33,7 +33,7 @@ LIBFT		= $(LIBFT_DIR)/libft.a
 # BSRCS		= $(addprefix $(BSRCS_DIR)/, $(BFILES))
 # BOBJS		= $(patsubst $(BSRCS_DIR)/%.c, $(BOBJS_DIR)/%.o, $(BSRCS))
 
-SRCS		= $(wildcard $(SRCS_DIR)/*.c)
+SRCS		= $(wildcard $(SRCS_DIR)/*/*.c)
 OBJS		= $(patsubst $(SRCS_DIR)/%.c, $(OBJS_DIR)/%.o, $(SRCS))
 
 NAME		= minishell
