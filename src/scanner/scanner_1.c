@@ -15,7 +15,6 @@
 static t_token	tokenize_sym(t_scanner *scanner, char c);
 static t_token	tokenize(t_scanner *scanner, char c);
 static t_token	tokenize_redir(t_scanner *scanner, char c);
-void			init_scanner(t_scanner *scanner, const char *src);
 
 t_token	scan_token(t_scanner *scanner)
 {
