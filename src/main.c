@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <readline/readline.h>
 
 int	main(int ac, char **av)
 {
@@ -32,8 +31,7 @@ int	main(int ac, char **av)
 				break ;
 			}
 			token = scan_token(&scanner);
-			for (int i = 0; i < token.len; i++)
-				printf("%c", token.start[i]);
+			printf("%*s", token.len, token.start);
 			printf(" - type = %d\n", token.type);
 		}
 	}
