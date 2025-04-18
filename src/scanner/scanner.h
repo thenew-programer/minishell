@@ -56,30 +56,32 @@ typedef struct s_scanner
 	int			line;
 }	t_scanner;
 
-void	init_scanner(t_scanner *scanner, const char *src);
+void			init_scanner(t_scanner *scanner, const char *src);
 
-t_token	scan_token(t_scanner *scanner);
+t_token			scan_token(t_scanner *scanner);
 
-int		advance(t_scanner *scanner);
+t_token_type	peeknext_token(t_scanner *scanner);
 
-int		peek(t_scanner *scanner);
+int				advance(t_scanner *scanner);
 
-int		peek_next(t_scanner *scanner);
+int				peek(t_scanner *scanner);
 
-int		is_atend(t_scanner *scanner);
+int				peek_next(t_scanner *scanner);
 
-int		match(t_scanner *scanner, char c);
+int				is_atend(t_scanner *scanner);
 
-void	skip_whitespace(t_scanner *scanner);
+int				match(t_scanner *scanner, char c);
 
-int		is_alpha(int c);
+void			skip_whitespace(t_scanner *scanner);
 
-t_token	make_token(t_scanner *scanner, t_token_type type);
+int				is_alpha(int c);
 
-t_token	number(t_scanner *scanner);
+t_token			make_token(t_scanner *scanner, t_token_type type);
 
-t_token	word(t_scanner *scanner);
+t_token			number(t_scanner *scanner);
 
-t_token	string(t_scanner *scanner, int delim);
+t_token			word(t_scanner *scanner);
+
+t_token			string(t_scanner *scanner, int delim);
 
 #endif /* SCANNER_H */

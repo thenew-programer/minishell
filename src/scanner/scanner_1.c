@@ -32,6 +32,15 @@ t_token	scan_token(t_scanner *scanner)
 	return (tokenize(scanner, c));
 }
 
+t_token_type	peeknext_token(t_scanner *scanner)
+{
+	t_token	token;
+
+	token = scan_token(scanner);
+	scanner->start -= token.len;
+	return (token.type);
+}
+
 void	init_scanner(t_scanner *scanner, const char *src)
 {
 	if (!scanner)

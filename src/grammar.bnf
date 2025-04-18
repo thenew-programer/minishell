@@ -1,0 +1,59 @@
+<start>           ::= <statement>
+
+<statement>         ::= <command>
+                      | <pipeline>
+                      | <assignment>
+
+<command>           ::= <word> <argument_list>? <redirection_list>?
+
+<argument_list>     ::= <word>*
+
+<redirection_list>  ::= <redirection>*
+
+<redirection>       ::= ('>' | '<' | '<<' | '>>' | '<<-' | '2>' | '2>>' | '1>' | '1>>' | '&>' | '>&' | '2&>1') WORD
+
+<assignment>        ::= <name> '=' <word>
+
+<pipeline>          ::= <command> ('|' <command>)+
+
+<name>              ::= <word>
+
+<word>              ::= 'a' 'b'...'z' '_' '1'...'9'
+
+
+
+
+
+<start>             ::= <statement>
+
+<statement>         ::= <command>
+                      | <pipeline>
+                      | <assignment>
+
+<command>           ::= <word> <argument_list>? <redirection_list>?
+
+<argument_list>     ::= <word>*
+
+<redirection_list>  ::= <redirection>*
+
+<redirection>       ::= ('>' | '<' | '<<' | '>>' | '<<-' | '2>' | '2>>' | '1>' | '1>>' | '&>' | '>&' | '2&>1') <word>
+
+<assignment>        ::= <name> '=' <word>
+
+<pipeline>          ::= <command> ('|' <command>)+
+
+<name>              ::= <identifier>
+
+<word>              ::= <identifier>
+                      | <quoted_string>
+                      | <double_quoted_string>
+
+<identifier>        ::= [a-zA-Z0-9_]+
+
+<quoted_string>     ::= "'" <single_quoted_content> "'"
+
+<single_quoted_content> ::= ([^'])* 
+
+<double_quoted_string> ::= '"' <double_quoted_content> '"'
+
+<double_quoted_content> ::= ([^"])*
