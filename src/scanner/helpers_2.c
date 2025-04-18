@@ -6,7 +6,7 @@
 /*   By: ybouryal <ybouryal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 06:06:26 by ybouryal          #+#    #+#             */
-/*   Updated: 2025/03/30 06:13:26 by ybouryal         ###   ########.fr       */
+/*   Updated: 2025/04/18 15:45:07 by ybouryal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	skip_whitespace(t_scanner *scanner)
 {
 	char	c;
+	char	tmp;
 
 	while (1)
 	{
@@ -27,8 +28,11 @@ void	skip_whitespace(t_scanner *scanner)
 			advance(scanner);
 		}
 		else if (c == '#')
-			while (!is_atend(scanner))
-				advance(scanner);
+		{
+			tmp = c;
+			while (!is_atend(scanner) && tmp != '\n')
+				tmp = advance(scanner);
+		}
 		else
 			return ;
 	}
