@@ -15,7 +15,6 @@
 
 <assignment_word> ::= <word> '=' <word>
 
-
 <redirection> ::=  '>' <word>
                 |  '<' <word>
                 |  <number> '>' <word>
@@ -156,18 +155,9 @@
 
 <pipeline_command> ::= <pipeline>
                     |  '!' <pipeline>
-                    |  <timespec> <pipeline>
-                    |  <timespec> '!' <pipeline>
-                    |  '!' <timespec> <pipeline>
 
 <pipeline> ::=
-          <pipeline> '|' <newline_list> <pipeline>
+			<pipeline> '|' <newline_list> <pipeline>
 		    |  <command>
 
-<time_opt> ::= '-p'
-
-<timespec> ::=  time
-             |  time <time_opt>
-
-.XE "BNF (Backus-Naur Form)"
-.XE "bash" "syntax, BNF form of"
+<program> ::= 

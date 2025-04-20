@@ -1,29 +1,3 @@
-<start>           ::= <statement>
-
-<statement>         ::= <command>
-                      | <pipeline>
-                      | <assignment>
-
-<command>           ::= <word> <argument_list>? <redirection_list>?
-
-<argument_list>     ::= <word>*
-
-<redirection_list>  ::= <redirection>*
-
-<redirection>       ::= ('>' | '<' | '<<' | '>>' | '<<-' | '2>' | '2>>' | '1>' | '1>>' | '&>' | '>&' | '2&>1') WORD
-
-<assignment>        ::= <name> '=' <word>
-
-<pipeline>          ::= <command> ('|' <command>)+
-
-<name>              ::= <word>
-
-<word>              ::= 'a' 'b'...'z' '_' '1'...'9'
-
-
-
-
-
 <start>             ::= <statement>
 
 <statement>         ::= <command>
@@ -36,9 +10,35 @@
 
 <redirection_list>  ::= <redirection>*
 
-<redirection>       ::= ('>' | '<' | '<<' | '>>' | '<<-' | '2>' | '2>>' | '1>' | '1>>' | '&>' | '>&' | '2&>1') <word>
+<redirection>		::=  '>' <word>
+					  |  '<' <word>
+					  |  <number> '>' <word>
+					  |  <number> '<' <word>
+					  |  '>>' <word>
+					  |  <number> '>>' <word>
+					  |  '<<' <word>
+					  |  <number> '<<' <word>
+					  |  '<&' <number>
+					  |  <number> '<&' <number>
+					  |  '>&' <number>
+					  |  <number> '>&' <number>
+					  |  '<&' <word>
+					  |  <number> '<&' <word>
+					  |  '>&' <word>
+					  |  <number> '>&' <word>
+					  |  '<<-' <word>
+					  |  <number> '<<-' <word>
+					  |  '>&' '-'
+					  |  <number> '>&' '-'
+					  |  '<&' '-'
+					  |  <number> '<&' '-'
+					  |  '&>' <word>
+					  |  <number> '<>' <word>
+					  |  '<>' <word>
+					  |  '>|' <word>
+					  |  <number> '>|' <word>
 
-<assignment>        ::= <name> '=' <word>
+<assignment>        ::= <identifier> '=' <word>
 
 <pipeline>          ::= <command> ('|' <command>)+
 

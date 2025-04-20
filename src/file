@@ -1,0 +1,12 @@
+total 32
+drwxr-xr-x 4 ybouryal 2024_rabat  154 Apr 20 16:22 .
+drwxr-xr-x 5 ybouryal 2024_rabat   93 Apr 18 21:45 ..
+-rw-r--r-- 1 ybouryal 2024_rabat 5870 Apr 20 16:03 bash.bnf
+-rw-r--r-- 1 ybouryal 2024_rabat    0 Apr 20 16:30 file
+-rw-r--r-- 1 ybouryal 2024_rabat 1496 Apr 20 16:10 grammar.bnf
+-rw-r--r-- 1 ybouryal 2024_rabat 9171 Apr 14 11:08 libft.h
+-rw-r--r-- 1 ybouryal 2024_rabat 1013 Apr 18 20:05 main.c
+-rw-r--r-- 1 ybouryal 2024_rabat 1050 Apr 18 15:50 minishell.h
+drwxr-xr-x 2 ybouryal 2024_rabat   97 Apr 20 16:29 parser
+-rw-r--r-- 1 ybouryal 2024_rabat    0 Apr 18 21:43 real_grammar.bnf
+drwxr-xr-x 2 ybouryal 2024_rabat   99 Apr 18 22:08 scanner

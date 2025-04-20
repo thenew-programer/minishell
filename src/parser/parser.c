@@ -6,15 +6,16 @@
 /*   By: ybouryal <ybouryal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 19:58:52 by ybouryal          #+#    #+#             */
-/*   Updated: 2025/04/18 20:08:01 by ybouryal         ###   ########.fr       */
+/*   Updated: 2025/04/20 16:17:43 by ybouryal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "parser.h"
-#include <string.h>
 
-void	parse(const char *src)
+/*
+t_ast_node	*parse(const char *src)
 {
+	t_ast_node	*ast;
 	t_scanner	scanner;
 	t_token		token;
 
@@ -31,50 +32,30 @@ void	parse(const char *src)
 			break ;
 		}
 	}
+	return (ast);
+}
+*/
+
+void	init_parser(t_parser *parser, t_scanner *scanner)
+{
+	parser->scanner = scanner;
+	parser->curr = scan_token(scanner);
+	parser->prev = parser->curr;
+	parser->ast = NULL;
 }
 
-char	*parse_word(t_scanner *scanner, t_token token)
+int	parser_match(t_parser *parser, t_token_type type)
 {
-	char	*str;
-
-	if (token.type != TOKEN_WORD)
-		return ((void *)-1);
-	return (strndup(token.start, token.len));
-}
-
-char	*parse_name(t_scanner *scanner, t_token token)
-{
-	return (parse_word(scanner, token));
-}
-
-t_assignode	*parse_assign(t_scanner *scanner, t_token token)
-{
-	t_assignode	*node;
-	t_token	next;
-	char	*name;
-	char	*word;
-
-	node = malloc(sizeof(t_assignode));
-	if (!node)
-		return (NULL);
-	parse_name(scanner, token);
-	if (name)
+	if (peeknext_token(parser->scanner) == type)
 	{
-		if (peeknext_token(scanner) == TOKEN_EQUAL)
-		{
-			scan_token(scanner);
-			if (peeknext_token(scanner) == TOKEN_WORD || peeknext_token(scanner) == TOKEN) {
-
-			}
-			word = parse_word(scanner, token);
-			if (word) {
-				node->word = word;
-				node->name = name;
-				return (node);
-			}
-		}
+		parser->prev = parser->curr;
+		parser->curr = scan_token(parser->scanner);
+		return (1);
 	}
-	return (node);
+	return (0);
 }
-
-
+void	parser_advance(t_parser *parser)
+{
+	parser->prev = parser->curr;
+	parser->curr = scan_token(parser->scanner);
+}
