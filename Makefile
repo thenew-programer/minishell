@@ -6,7 +6,7 @@
 #    By: ybouryal <ybouryal@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/12 14:28:19 by ybouryal          #+#    #+#              #
-#    Updated: 2025/02/12 16:05:29 by ybouryal         ###   ########.fr        #
+#    Updated: 2025/04/22 20:22:42 by ybouryal         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ RESET		:= $(shell tput -Txterm sgr0)
 
 CC			= cc
 CFLAGS		= -Wall -Werror -Wextra
-LDFLAGS		= -lreadline
+LDFLAGS		= -lreadline -g
 RM			= rm -rf
 
 SRCS_DIR	= src
@@ -33,7 +33,10 @@ LIBFT		= $(LIBFT_DIR)/libft.a
 # BSRCS		= $(addprefix $(BSRCS_DIR)/, $(BFILES))
 # BOBJS		= $(patsubst $(BSRCS_DIR)/%.c, $(BOBJS_DIR)/%.o, $(BSRCS))
 
-SRCS		= $(wildcard $(SRCS_DIR)/*/*.c)
+SRCS		= src/main.c
+PARSER		= $(wildcard $(SRCS_DIR)/parser/*.c)
+SCANNER		= $(wildcard $(SRCS_DIR)/scanner/*.c)
+
 OBJS		= $(patsubst $(SRCS_DIR)/%.c, $(OBJS_DIR)/%.o, $(SRCS))
 
 NAME		= minishell
@@ -41,12 +44,16 @@ BNAME		= minishell_bonus
 
 all:		$(NAME)
 
-$(NAME):	$(OBJS) $(LIBFT)
-			@$(CC) $(OBJS) -o $@ $(LDFLAGS)
+# @$(CC) $(OBJS) -o $@ $(LDFLAGS)
+# $(NAME):	$(OBJS) $(LIBFT)
+$(NAME):	$(LIBFT) $(SRCS) $(PARSER) $(SCANNER)
+			@$(CC) $(SRCS) $(PARSER) $(SCANNER) -o $@ $(LDFLAGS) $(LIBFT)
 			@echo "$(BOLD)$(GREEN)$(NAME) compiled Successfully$(RESET)"
 
-$(OBJS_DIR)/%.o:		$(SRCS_DIR)/%.c
+$(OBJS_DIR)/%.o:		$(SRCS_DIR)/%.c $(SRCS_DIR)/parser/%.c $(SRCS_DIR)/scanner/%.c
 			@mkdir -p $(OBJS_DIR)
+			@mkdir -p $(OBJS_DIR)/parser
+			@mkdir -p $(OBJS_DIR)/scanner
 			@$(CC) $(CFLAGS) -c $< -o $@
 			@echo "Compiling $(NAME) ..."
 

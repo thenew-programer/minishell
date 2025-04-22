@@ -6,7 +6,7 @@
 /*   By: ybouryal <ybouryal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 05:42:13 by ybouryal          #+#    #+#             */
-/*   Updated: 2025/04/22 12:17:29 by ybouryal         ###   ########.fr       */
+/*   Updated: 2025/04/22 20:10:38 by ybouryal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ typedef struct s_astnode	t_ast_node;
 
 typedef enum e_node_type
 {
-	NODE_CMD,
-	NODE_PIPE,
+	NODE_CMD = 0,
 	NODE_SUBSHELL,
+	NODE_PIPE,
+	NODE_BACKGROUND,
 	NODE_AND,
 	NODE_OR,
-	NODE_BACKGROUND,
 	NODE_LIST
 }	t_node_type;
 
@@ -81,6 +81,7 @@ struct s_astnode
 		{
 			t_ast_node	**commands;
 			int			count;
+			int			size;
 		}s_list;
 	}u_content;
 };
@@ -103,7 +104,9 @@ typedef struct s_parser
 }	t_parser;
 
 /* ast.c */
-t_ast_node	*init_ast(void);
+t_ast_node	*create_ast_node(t_node_type type);
+void		free_ast_node(t_ast_node *root);
+void		print_ast(t_ast_node *root, int depth);
 
 /* word.c */
 t_word		*parse_word(t_parser *parser);
@@ -124,17 +127,27 @@ t_redir_list*parse_redir(t_redir_list **list, t_parser *parser);
 void		free_redir_list(t_redir_list *list);
 
 /* cmd.c */
-t_cmd		*parse_cmd(t_parser *parser);
+t_ast_node	*parse_cmd(t_parser *parser);
 void		free_cmd(t_cmd *cmd);
+void		print_cmd(t_cmd *cmd);
 
 /* error.c*/
 void		make_error(t_parser *parser, const char *msg, int code);
 void		print_error(t_parser *parser);
 
+/* pipeline.c */
 t_ast_node	*parse_pipeline(t_parser *parser);
+
+/* logical.c */
 t_ast_node	*parse_logical(t_parser *parser);
+
+/* command.c */
 t_ast_node	*parse_command(t_parser *parser);
+
+/* list.c */
 t_ast_node	*parse_list(t_parser *parser);
+t_ast_node	*alloc_commands(t_ast_node *node);
+void		free_node_list(t_ast_node *node);
 
 /* ast.c */
 t_ast_node	*create_ast_node(t_node_type type);

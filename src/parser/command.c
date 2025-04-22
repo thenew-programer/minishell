@@ -6,7 +6,7 @@
 /*   By: ybouryal <ybouryal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:38:32 by ybouryal          #+#    #+#             */
-/*   Updated: 2025/04/22 12:05:51 by ybouryal         ###   ########.fr       */
+/*   Updated: 2025/04/22 19:35:10 by ybouryal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,31 +15,28 @@
 t_ast_node	*parse_command(t_parser *parser)
 {
 	t_ast_node	*command;
-	t_cmd		*cmd;
 	t_ast_node	*subshell;
 
-	command = malloc(sizeof(t_ast_node));
-	if (!command)
-		return (NULL);
+	command = NULL;
 	if (parser->curr.type == TOKEN_WORD
 		|| parser->curr.type == TOKEN_DQ_WORD
 		|| parser->curr.type == TOKEN_SQ_WORD)
 	{
-		command->type = NODE_CMD;
-		cmd = parse_cmd(parser);
-		if (!cmd)
-			return (free(command), NULL);
-		command->u_content.cmd = cmd;
+		command = parse_cmd(parser);
+		if (!command)
+			return (NULL);
 	}
 	else if (parser_match(parser, TOKEN_LEFT_PAREN))
 	{
-		command->type = NODE_SUBSHELL;
 		subshell = parse_list(parser);
-		if (!subshell || parser->curr.type != TOKEN_RIGHT_PAREN)
-			return (free(command), NULL);
+		if (!subshell)
+			return (NULL);
+		if (parser->curr.type != TOKEN_RIGHT_PAREN)
+			return (free_ast_node(subshell), NULL);
+		command = create_ast_node(NODE_SUBSHELL);
+		if (!command)
+			return (NULL);
 		command->u_content.subshell = subshell;
 	}
-	else
-		return (free(command), NULL);
 	return (command);
 }
