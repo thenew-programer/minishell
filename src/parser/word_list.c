@@ -26,14 +26,14 @@ t_word_list	*new_word_list(t_word *word)
 
 t_word_list	*append_word_list(t_word_list *head, t_word_list *new)
 {
-	t_word_list	*tmp;
+	t_word_list	*last;
 
 	if (!head)
 		return (new);
-	tmp = head;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new;
+	last = head;
+	while (last->next)
+		last = last->next;
+	last->next = new;
 	return (head);
 }
 
@@ -42,6 +42,9 @@ void	free_word_list(t_word_list *head)
 	t_word_list	*curr;
 	t_word_list	*next;
 
+	if (!head)
+		return ;
+	curr = head;
 	while (curr) {
 		next = curr->next;
 		free(curr->word);
@@ -50,25 +53,22 @@ void	free_word_list(t_word_list *head)
 	}
 }
 
-t_word_list	*parse_word_list(t_parser *parser)
+t_word_list	*parse_word_list(t_word_list **list, t_parser *parser)
 {
-	t_word_list	*list;
 	t_word_list	*new;
 	t_word		*word;
 
-	list = NULL;
 	while (parser->curr.type == TOKEN_WORD
 		|| parser->curr.type == TOKEN_DQ_WORD
 		|| parser->curr.type == TOKEN_SQ_WORD)
 	{
 		word = parse_word(parser);
 		if (!word)
-			return (free_word_list(list), NULL);
+			return (free_word_list(*list), NULL);
 		new = new_word_list(word);
 		if (!new)
-			return (free_word_list(list), NULL);
-		list = append_word_list(list, new);
-		parser_advance(parser);
+			return (free_word_list(*list), NULL);
+		*list = append_word_list(*list, new);
 	}
-	return (list);
+	return (*list);
 }

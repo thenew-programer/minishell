@@ -12,31 +12,8 @@
 
 <redirection>		::=  '>' <word>
 					  |  '<' <word>
-					  |  <number> '>' <word>
-					  |  <number> '<' <word>
 					  |  '>>' <word>
-					  |  <number> '>>' <word>
 					  |  '<<' <word>
-					  |  <number> '<<' <word>
-					  |  '<&' <number>
-					  |  <number> '<&' <number>
-					  |  '>&' <number>
-					  |  <number> '>&' <number>
-					  |  '<&' <word>
-					  |  <number> '<&' <word>
-					  |  '>&' <word>
-					  |  <number> '>&' <word>
-					  |  '<<-' <word>
-					  |  <number> '<<-' <word>
-					  |  '>&' '-'
-					  |  <number> '>&' '-'
-					  |  '<&' '-'
-					  |  <number> '<&' '-'
-					  |  '&>' <word>
-					  |  <number> '<>' <word>
-					  |  '<>' <word>
-					  |  '>|' <word>
-					  |  <number> '>|' <word>
 
 <assignment>        ::= <identifier> '=' <word>
 

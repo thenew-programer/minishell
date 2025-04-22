@@ -1,0 +1,64 @@
+## PASSED TESTS
+echo hello
+
+ls -la /usr/bin
+
+pwd
+
+echo 'hello world'
+
+echo "Hello world"
+
+echo "hello 'there'" "and 'goodbye'"
+
+echo "" ''
+
+echo "hello > world" '$PATH'
+
+cat < input.txt
+
+echo hello > output.txt
+
+cat >> append.txt
+
+cat < input.txt > output.txt
+
+echo  hello > output.txt world
+
+cat << EOF
+
+> output.txt echo hello
+
+echo hello > file1 > file2
+
+command < in.txt > out.txt >> append.txt
+
+echo>file.txt
+
+echo >	file.txt
+
+echo > "file with spaces.txt"
+## FAILED TESTS
+> output.txt
+
+echo hello >
+
+cat >
+
+echo 'hello world
+
+echo "hello world
+
+echo "hello world'
+
+echo '
+
+cat << "EOF
+
+command > file1 > > file2
+
+"" > out.txt
+
+"   " > out.txt
+
+echo ">" output.txt
