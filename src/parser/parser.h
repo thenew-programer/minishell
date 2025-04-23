@@ -6,7 +6,7 @@
 /*   By: ybouryal <ybouryal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 05:42:13 by ybouryal          #+#    #+#             */
-/*   Updated: 2025/04/22 20:10:38 by ybouryal         ###   ########.fr       */
+/*   Updated: 2025/04/23 16:04:33 by ybouryal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define PARSER_H
 
 # include "../scanner/scanner.h"
+# include <stdbool.h>
 # include <stdio.h>
 # include <string.h>
 
@@ -42,10 +43,18 @@ typedef struct s_word_list
 	struct s_word_list	*next;
 }	t_word_list;
 
+typedef enum e_redir_type
+{
+	REDIR_IN,
+	REDIR_OUT,
+	APPEND_OUT,
+	HEREDOC,
+}	t_redir_type;
+
 typedef struct s_redir_list
 {
-	char				*op;
-	char				*filename;
+	t_redir_type	type;
+	char			*filename;
 	struct s_redir_list	*next;
 }	t_redir_list;
 
@@ -106,7 +115,7 @@ typedef struct s_parser
 /* ast.c */
 t_ast_node	*create_ast_node(t_node_type type);
 void		free_ast_node(t_ast_node *root);
-void		print_ast(t_ast_node *root, int depth);
+void		print_ast(t_ast_node *root, const char *prefix, bool is_last);
 
 /* word.c */
 t_word		*parse_word(t_parser *parser);
@@ -123,8 +132,8 @@ int			parser_match(t_parser *parser, t_token_type type);
 void		init_parser(t_parser *parser, t_scanner *scanner);
 
 /* redir.c */
-t_redir_list*parse_redir(t_redir_list **list, t_parser *parser);
-void		free_redir_list(t_redir_list *list);
+t_redir_list	*parse_redir(t_redir_list **list, t_parser *parser);
+void			free_redir_list(t_redir_list *list);
 
 /* cmd.c */
 t_ast_node	*parse_cmd(t_parser *parser);

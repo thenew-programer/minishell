@@ -12,14 +12,15 @@
 
 #include "parser.h"
 
-static t_redir_list	*new_redir_list(char *op, char *filename)
+static t_redir_list	*new_redir_list(t_redir_type type, char *filename)
 {
 	t_redir_list	*new;
 
 	new = malloc(sizeof(t_redir_list));
 	if (!new)
 		return (NULL);
-	new->op = op;
+	// new->op = op;
+	new->type = type;
 	new->filename = filename;
 	new->next = NULL;
 	return (new);
@@ -40,7 +41,7 @@ static t_redir_list	*append_redir_list(t_redir_list *head, t_redir_list *new)
 
 t_redir_list	*parse_redir(t_redir_list **list, t_parser *parser)
 {
-	char			*op;
+	t_redir_type	type;
 	char			*filename;
 	t_redir_list	*new;
 
@@ -49,20 +50,28 @@ t_redir_list	*parse_redir(t_redir_list **list, t_parser *parser)
 		|| parser->curr.type == TOKEN_APPEND_OUT
 		|| parser->curr.type == TOKEN_HEREDOC)
 	{
-		op = strndup(parser->curr.start, parser->curr.len);
-		if (parser_match(parser, TOKEN_WORD) 
-			|| parser_match(parser, TOKEN_SQ_WORD)
-			|| parser_match(parser, TOKEN_DQ_WORD))
+		// op = strndup(parser->curr.start, parser->curr.len);
+		if (parser->curr.type == TOKEN_REDIR_OUT)
+			type = REDIR_OUT;
+		else if (parser->curr.type == TOKEN_REDIR_IN)
+			type = REDIR_IN;
+		else if (parser->curr.type == TOKEN_APPEND_OUT)
+			type = APPEND_OUT;
+		else if (parser->curr.type == TOKEN_HEREDOC)
+			type = HEREDOC;
+		parser_advance(parser);
+		if (parser->curr.type == TOKEN_WORD
+			|| parser->curr.type == TOKEN_SQ_WORD
+			|| parser->curr.type == TOKEN_DQ_WORD)
 		{
 			filename = strndup(parser->curr.start, parser->curr.len);
-			new = new_redir_list(op, filename);
+			new = new_redir_list(type, filename);
 			if (!new)
-				return (free(filename), free(op), NULL);
+				return (free(filename), NULL);
 			*list = append_redir_list(*list, new);
 			parser_advance(parser);
 			return (*list);
 		}
-		free(op);
 		if (!parser->has_error) {
 			make_error(parser, "", 2);
 			parser->has_error = 1;
@@ -81,7 +90,6 @@ void	free_redir_list(t_redir_list *list)
 	{
 		next = list->next;
 		free(list->filename);
-		free(list->op);
 		free(list);
 		list = next;
 	}

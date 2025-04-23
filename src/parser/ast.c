@@ -80,15 +80,6 @@ static t_ast_node	*init_ast(t_ast_node *node, t_node_type type)
 	return (node);
 }
 
-static void	print_tabs(int n)
-{
-	int	i;
-
-	i = -1;
-	while (++i < n)
-		printf("\t");
-}
-
 static char	*stringfy_node_type(t_node_type type)
 {
 	if (type == NODE_AND)
@@ -108,34 +99,70 @@ static char	*stringfy_node_type(t_node_type type)
 	return ("NONE");
 }
 
-void	print_ast(t_ast_node *root, int depth)
+static void	print_prefix(const char *prefix, bool is_last) {
+	printf("%s", prefix);
+	if (is_last)
+		printf("└── ");
+	else
+		printf("├── ");
+}
+
+static void	append_prefix(char *buffer, const char *prefix, bool is_last) {
+	strcpy(buffer, prefix);
+	strcat(buffer, is_last ? "    " : "│   ");
+}
+
+static void	print_vertical_connector(const char *prefix, bool parent_has_more)
+{
+	printf("%s", prefix);
+	if (parent_has_more)
+		printf("│\n");
+	else
+		printf(" \n");
+}
+
+void	print_ast(t_ast_node *root, const char *prefix, bool is_last)
 {
 	if (!root)
 		return ;
-	print_tabs(depth);
-	printf("%s:", stringfy_node_type(root->type));
-	if (root->type != NODE_CMD)
+
+	print_prefix(prefix, is_last);
+	printf("%s", stringfy_node_type(root->type));
+	if (root->type == NODE_CMD)
+	{
+		printf(": ");
+		print_cmd(root->u_content.cmd);
+	}
+	else
 		printf("\n");
+
+	char new_prefix[1024];
+	append_prefix(new_prefix, prefix, is_last);
+
 	if (root->type == NODE_OR || root->type == NODE_AND)
 	{
-		print_ast(root->u_content.s_binary.left, depth + 1);
-		print_ast(root->u_content.s_binary.right, depth + 1);
+		print_ast(root->u_content.s_binary.left, new_prefix, false);
+		print_vertical_connector(prefix, !is_last);
+		print_ast(root->u_content.s_binary.right, new_prefix, true);
 	}
 	else if (root->type == NODE_LIST)
 	{
-		int	i = -1;
-		while (++i < root->u_content.s_list.count)
-			print_ast(root->u_content.s_list.commands[i], depth + 1);
+		for (int i = 0; i < root->u_content.s_list.count; ++i)
+		{
+			bool last = (i == root->u_content.s_list.count - 1);
+			print_ast(root->u_content.s_list.commands[i], new_prefix, last);
+			if (!last)
+				print_vertical_connector(prefix, !is_last);
+		}
 	}
 	else if (root->type == NODE_SUBSHELL)
-		print_ast(root->u_content.subshell, depth + 1);
+		print_ast(root->u_content.subshell, new_prefix, true);
 	else if (root->type == NODE_PIPE)
 	{
-		print_ast(root->u_content.s_pipe.left, depth + 1);
-		print_ast(root->u_content.s_pipe.right, depth + 1);
+		print_ast(root->u_content.s_pipe.left, new_prefix, false);
+		print_vertical_connector(prefix, !is_last);
+		print_ast(root->u_content.s_pipe.right, new_prefix, true);
 	}
 	else if (root->type == NODE_BACKGROUND)
-		print_ast(root->u_content.s_background.cmd, depth + 1);
-	else if (root->type == NODE_CMD)
-		print_cmd(root->u_content.cmd);
+		print_ast(root->u_content.s_background.cmd, new_prefix, true);
 }

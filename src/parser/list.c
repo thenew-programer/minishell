@@ -44,14 +44,14 @@ t_ast_node	*parse_list(t_parser *parser)
 	while (parser_match(parser, TOKEN_SEMICOLAN))
 	{
 		if (list->u_content.s_list.count == list->u_content.s_list.size)
-			if (!extend_commands(list))
+			if (extend_commands(list) == NULL)
 				return (free_ast_node(node), NULL);
 		node = parse_logical(parser);
 		if (!node)
 			return (free_ast_node(node), NULL);
 		list->u_content.s_list.commands[list->u_content.s_list.count++] = node;
 	}
-	return (node);
+	return (list);
 }
 
 static t_ast_node	*extend_commands(t_ast_node *node)

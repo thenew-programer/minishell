@@ -12,30 +12,6 @@
 
 # include "parser.h"
 
-/*
-t_ast_node	*parse(const char *src)
-{
-	t_ast_node	*ast;
-	t_scanner	scanner;
-	t_token		token;
-
-	init_scanner(&scanner, src);
-	token = scan_token(&scanner);
-	while (1)
-	{
-		printf("%.*s", token.len, token.start);
-		printf(" - type = %d\n", token.type);
-		token = scan_token(&scanner);
-		if (token.type == TOKEN_EOF)
-		{
-			printf("\n");
-			break ;
-		}
-	}
-	return (ast);
-}
-*/
-
 void	init_parser(t_parser *parser, t_scanner *scanner)
 {
 	parser->scanner = scanner;
@@ -53,7 +29,7 @@ void	parser_advance(t_parser *parser)
 
 int	parser_match(t_parser *parser, t_token_type type)
 {
-	if (peeknext_token(parser->scanner) == type)
+	if (parser->curr.type == type)
 	{
 		parser_advance(parser);
 		return (1);

@@ -17,16 +17,17 @@ t_ast_node	*parse_logical(t_parser *parser)
 	t_ast_node	*left;
 	t_ast_node	*right;
 	t_ast_node	*logical;
+	t_node_type type;
 
 	left = parse_pipeline(parser);
 	if (!left)
 		return (NULL);
-	while (parser_match(parser, TOKEN_AND_AND
-		|| parser_match(parser, TOKEN_OR)))
+	while (parser_match(parser, TOKEN_AND_AND)
+		|| parser_match(parser, TOKEN_OR))
 	{
-		t_node_type type = NODE_AND;
-		if (parser->curr.type == TOKEN_OR)
-			type = NODE_OR;
+		type = NODE_OR;
+		if (parser->prev.type == TOKEN_AND_AND)
+			type = NODE_AND;
 		right = parse_pipeline(parser);
 		if (!right)
 			return (free_ast_node(left), NULL);

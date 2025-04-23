@@ -24,7 +24,7 @@ int	main()
 		ast = parse(src);
 		if (ast)
 		{
-			print_ast(ast, 0);
+			print_ast(ast, "", true);
 			free_ast_node(ast);
 		}
 		free(src);
