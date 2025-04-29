@@ -1,38 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   env.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ybouryal <ybouryal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/22 20:46:30 by ybouryal          #+#    #+#             */
-/*   Updated: 2024/10/25 18:14:41 by ybouryal         ###   ########.fr       */
+/*   Created: 2025/04/27 14:56:35 by ybouryal          #+#    #+#             */
+/*   Updated: 2025/04/27 14:58:47 by ybouryal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#ifndef ENV_H
+# define ENV_H
 
-int	ft_atoi(const char *nptr)
+# include "../parser/parser.h"
+
+typedef struct s_env
 {
-	int	result;
-	int	sign;
-	int	i;
+	t_word	*name;
+	t_word	*value;
+}	t_env;
 
-	i = 0;
-	result = 0;
-	sign = 1;
-	while (ft_isspace(nptr[i]))
-		i++;
-	if (nptr[i] == '-' || nptr[i] == '+')
-	{
-		if (nptr[i] == '-')
-			sign = -1;
-		i++;
-	}
-	while (nptr[i] >= '0' && nptr[i] <= '9')
-	{
-		result = (result * 10) + (nptr[i] - '0');
-		i++;
-	}
-	return (result * sign);
-}
+typedef struct s_env_list
+{
+	t_env				*var;
+	struct s_env_list	*next;
+}	t_env_list;
+
+#endif /* ENV_H */

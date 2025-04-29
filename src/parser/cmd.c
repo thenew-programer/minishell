@@ -72,7 +72,7 @@ void	print_cmd(t_cmd *cmd)
 	printf("] redir: ");
 	while (rlist)
 	{
-		printf("(%s %s)", rlist->op, rlist->filename);
+		printf("(%d %s)", rlist->type, rlist->filename->str);
 		rlist = rlist->next;
 		if (!rlist)
 			printf(" ");

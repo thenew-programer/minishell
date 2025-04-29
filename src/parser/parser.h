@@ -45,16 +45,16 @@ typedef struct s_word_list
 
 typedef enum e_redir_type
 {
-	REDIR_IN,
-	REDIR_OUT,
-	APPEND_OUT,
-	HEREDOC,
+	REDIR_IN = TOKEN_REDIR_IN,
+	REDIR_OUT = TOKEN_REDIR_OUT,
+	APPEND_OUT = TOKEN_APPEND_OUT,
+	HEREDOC = TOKEN_HEREDOC,
 }	t_redir_type;
 
 typedef struct s_redir_list
 {
-	t_redir_type	type;
-	char			*filename;
+	t_redir_type		type;
+	t_word				*filename;
 	struct s_redir_list	*next;
 }	t_redir_list;
 
@@ -124,6 +124,7 @@ void		free_word(t_word *word);
 /* word_list */
 t_word_list	*parse_word_list(t_word_list **list, t_parser *parser);
 void		free_word_list(t_word_list *head);
+int			word_list_to_arr(t_word_list *word_list, char **dest);
 
 /* parser.c */
 t_ast_node	*parse(const char *src);
@@ -157,6 +158,9 @@ t_ast_node	*parse_command(t_parser *parser);
 t_ast_node	*parse_list(t_parser *parser);
 t_ast_node	*alloc_commands(t_ast_node *node);
 void		free_node_list(t_ast_node *node);
+
+/* subshell.c */
+t_ast_node	*parse_subshell(t_parser *parser);
 
 /* ast.c */
 t_ast_node	*create_ast_node(t_node_type type);

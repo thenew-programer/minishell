@@ -14,11 +14,23 @@
 
 t_ast_node	*parse_subshell(t_parser *parser)
 {
+	t_ast_node	*list;
 	t_ast_node	*subshell;
 
 	if (parser_match(parser, TOKEN_LEFT_PAREN))
-		subshell = parse_list(parser);
+	{
+		list = parse_list(parser);
+		if (!list)
+			return (NULL);
+	}
 	if (!parser_match(parser, TOKEN_RIGHT_PAREN))
-		return (free_ast_node(subshell), NULL);
+	{
+		make_error(parser, "", 2);
+		return (free_ast_node(list), NULL);
+	}
+	subshell = create_ast_node(NODE_SUBSHELL);
+	if (!subshell)
+		return (free_ast_node(list), NULL);
+	subshell->u_content.subshell = list;
 	return (subshell);
 }

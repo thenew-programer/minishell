@@ -6,11 +6,34 @@
 /*   By: ybouryal <ybouryal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 15:29:07 by ybouryal          #+#    #+#             */
-/*   Updated: 2025/04/20 15:29:14 by ybouryal         ###   ########.fr       */
+/*   Updated: 2025/04/27 18:48:52 by ybouryal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
+
+int	word_list_to_arr(t_word_list *word_list, char **dest)
+{
+	int	count;
+	if (!dest)
+	{
+		while (word_list)
+		{
+			word_list = word_list->next;
+			count++;
+		}
+		return (count);
+	}
+	int	i = 0;
+	while (word_list)
+	{
+
+		dest[i++] = word_list->word->str;
+		word_list = word_list->next;
+	}
+	dest[i] = NULL;
+	return (i);
+}
 
 t_word_list	*new_word_list(t_word *word)
 {

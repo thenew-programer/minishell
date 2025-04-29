@@ -6,7 +6,7 @@
 /*   By: ybouryal <ybouryal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:38:35 by ybouryal          #+#    #+#             */
-/*   Updated: 2024/10/26 11:24:18 by ybouryal         ###   ########.fr       */
+/*   Updated: 2025/04/25 10:10:47 by ybouryal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,18 @@
 # endif
 
 /* Part 1: Libc functions */
+
+
+/**
+ * Desc:	Checks if the char 'c' is an space character.
+ * 			space is defined by isspace.
+ *
+ * @c:		The char to check.
+ *
+ * return:	Non-zero value if 'c' is alnum
+ * 			Zero otherwise.
+ */
+int	ft_isspace(int c);
 
 /**
  * Desc:	Checks if the char 'c' is an alphabet or digit.

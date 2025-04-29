@@ -32,8 +32,9 @@ t_token	number(t_scanner *scanner)
 
 t_token	word(t_scanner *scanner)
 {
-	while ((is_alpha(peek(scanner)) || ft_isdigit(peek(scanner)))
-		&& !is_atend(scanner))
+	while ((is_alpha(peek(scanner)) || ft_isdigit(peek(scanner))
+			|| peek(scanner) == '_' || peek(scanner) == '-'
+			|| peek(scanner) == '$') && !is_atend(scanner))
 		advance(scanner);
 	return (make_token(scanner, TOKEN_WORD));
 }

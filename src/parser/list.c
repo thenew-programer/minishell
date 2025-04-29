@@ -43,6 +43,8 @@ t_ast_node	*parse_list(t_parser *parser)
 	list->u_content.s_list.commands[list->u_content.s_list.count++] = node;
 	while (parser_match(parser, TOKEN_SEMICOLAN))
 	{
+		if (parser->curr.type == TOKEN_EOF)
+			return (make_error(parser, "", 2), list);
 		if (list->u_content.s_list.count == list->u_content.s_list.size)
 			if (extend_commands(list) == NULL)
 				return (free_ast_node(node), NULL);

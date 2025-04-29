@@ -14,6 +14,9 @@
 
 void	make_error(t_parser *parser, const char *msg, int code)
 {
+	if (parser->has_error)
+		return ;
+	parser->has_error = 1;
 	parser->error.msg = msg;
 	parser->error.code = code;
 	parser->error.ctx = parser->scanner->curr;
@@ -21,19 +24,10 @@ void	make_error(t_parser *parser, const char *msg, int code)
 
 void	print_error(t_parser *parser)
 {
-	int		i;
-	char	ut;
-
-	if (!parser->has_error)
+	if (parser->has_error && parser->error.code == 0)
 		return ;
-	else if (parser->has_error && parser->error.code == 0)
-		return ;
-	i = 0;
-	ut = parser->error.ctx[i];
-	while ((ut == ' ' || ut == '\t') && parser->error.ctx[i])
-		ut = parser->scanner->curr[i++];
-	if (ut == 0)
-		fprintf(stderr, "bash: syntax error near unexpected token `newline'\n");
+	if (parser->curr.type == TOKEN_EOF)
+		fprintf(stderr, "minishell: syntax error near unexpected token `newline'\n");
 	else
-		fprintf(stderr, "bash: syntax error near unexpected token `%c'\n", ut);
+		fprintf(stderr, "minishell: syntax error near unexpected token `%.*s'\n", parser->curr.len, parser->curr.start);
 }

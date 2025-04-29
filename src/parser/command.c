@@ -15,7 +15,6 @@
 t_ast_node	*parse_command(t_parser *parser)
 {
 	t_ast_node	*command;
-	t_ast_node	*subshell;
 
 	if (parser->curr.type == TOKEN_WORD
 		|| parser->curr.type == TOKEN_DQ_WORD
@@ -29,17 +28,13 @@ t_ast_node	*parse_command(t_parser *parser)
 		if (!command)
 			return (NULL);
 	}
-	else if (parser_match(parser, TOKEN_LEFT_PAREN))
+	else if (parser->curr.type == TOKEN_LEFT_PAREN)
 	{
-		subshell = parse_list(parser);
-		if (!subshell)
-			return (NULL);
-		if (!parser_match(parser, TOKEN_RIGHT_PAREN))
-			return (free_ast_node(subshell), NULL);
-		command = create_ast_node(NODE_SUBSHELL);
+		command = parse_subshell(parser);
 		if (!command)
 			return (NULL);
-		command->u_content.subshell = subshell;
 	}
+	else
+		return (make_error(parser, "", 2), NULL);
 	return (command);
 }

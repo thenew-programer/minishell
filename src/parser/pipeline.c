@@ -23,6 +23,8 @@ t_ast_node	*parse_pipeline(t_parser *parser)
 		return (NULL);
 	while (parser_match(parser, TOKEN_PIPE))
 	{
+		if (parser->curr.type == TOKEN_EOF)
+			return (make_error(parser, "", 2), NULL);
 		right = parse_command(parser);
 		if (!right)
 			return (free_ast_node(left), NULL);

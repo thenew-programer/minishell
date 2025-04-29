@@ -1,38 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   list.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ybouryal <ybouryal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/22 20:46:30 by ybouryal          #+#    #+#             */
-/*   Updated: 2024/10/25 18:14:41 by ybouryal         ###   ########.fr       */
+/*   Created: 2025/04/27 16:50:49 by ybouryal          #+#    #+#             */
+/*   Updated: 2025/04/27 17:51:27 by ybouryal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "exec.h"
 
-int	ft_atoi(const char *nptr)
+int	exec_list(t_ast_node *node)
 {
-	int	result;
-	int	sign;
 	int	i;
+	int	ret;
 
 	i = 0;
-	result = 0;
-	sign = 1;
-	while (ft_isspace(nptr[i]))
-		i++;
-	if (nptr[i] == '-' || nptr[i] == '+')
-	{
-		if (nptr[i] == '-')
-			sign = -1;
-		i++;
-	}
-	while (nptr[i] >= '0' && nptr[i] <= '9')
-	{
-		result = (result * 10) + (nptr[i] - '0');
-		i++;
-	}
-	return (result * sign);
+	while (i < node->u_content.s_list.count)
+		ret = exec(node->u_content.s_list.commands[i++]);
+	return (ret);
 }

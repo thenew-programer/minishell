@@ -67,7 +67,6 @@ static t_word	*parse_dqword(t_parser *parser)
 
 	if (parser->curr.start[parser->curr.len - 1] != '"' && !parser->has_error)
 	{
-		parser->has_error = 1;
 		make_error(parser, "", 0);
 		return (NULL);
 	}
@@ -84,7 +83,6 @@ static t_word	*parse_sqword(t_parser *parser)
 
 	if (parser->curr.start[parser->curr.len - 1] != '\'' && !parser->has_error)
 	{
-		parser->has_error = 1;
 		make_error(parser, "", 0);
 		return (NULL);
 	}

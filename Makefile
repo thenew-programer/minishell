@@ -16,8 +16,8 @@ BOLD		:= $(shell tput bold);
 RESET		:= $(shell tput -Txterm sgr0)
 
 CC			= cc
-CFLAGS		= -Wall -Werror -Wextra
-LDFLAGS		= -lreadline -g
+CFLAGS		= -Wall -Werror -Wextra -g
+LDFLAGS		= -lreadline
 RM			= rm -rf
 
 SRCS_DIR	= src
@@ -33,9 +33,10 @@ LIBFT		= $(LIBFT_DIR)/libft.a
 # BSRCS		= $(addprefix $(BSRCS_DIR)/, $(BFILES))
 # BOBJS		= $(patsubst $(BSRCS_DIR)/%.c, $(BOBJS_DIR)/%.o, $(BSRCS))
 
-SRCS		= src/main.c
+SRCS		= src/main.c src/prompt.c
 PARSER		= $(wildcard $(SRCS_DIR)/parser/*.c)
 SCANNER		= $(wildcard $(SRCS_DIR)/scanner/*.c)
+EXECUTOR	= $(wildcard $(SRCS_DIR)/executor/*.c)
 
 OBJS		= $(patsubst $(SRCS_DIR)/%.c, $(OBJS_DIR)/%.o, $(SRCS))
 
@@ -46,8 +47,8 @@ all:		$(NAME)
 
 # @$(CC) $(OBJS) -o $@ $(LDFLAGS)
 # $(NAME):	$(OBJS) $(LIBFT)
-$(NAME):	$(LIBFT) $(SRCS) $(PARSER) $(SCANNER)
-			@$(CC) $(SRCS) $(PARSER) $(SCANNER) -o $@ $(LDFLAGS) $(LIBFT)
+$(NAME):	$(LIBFT) $(SRCS) $(PARSER) $(SCANNER) $(EXECUTOR)
+			@$(CC) $(SRCS) $(PARSER) $(SCANNER) $(EXECUTOR) -o $@ $(CFLAGS) $(LDFLAGS) $(LIBFT)
 			@echo "$(BOLD)$(GREEN)$(NAME) compiled Successfully$(RESET)"
 
 $(OBJS_DIR)/%.o:		$(SRCS_DIR)/%.c $(SRCS_DIR)/parser/%.c $(SRCS_DIR)/scanner/%.c
