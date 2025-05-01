@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "exec.h"
-#include <unistd.h>
 
 int	exec_pipe(t_executor *executor, t_ast_node *node, t_ctx *ctx)
 {

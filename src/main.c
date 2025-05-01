@@ -48,8 +48,8 @@ int	main()
 	init();
 	while (1)
 	{
-		src = readline("$> ");
-		// src = prompt();
+		// src = readline("$> ");
+		src = prompt();
 		if (!src)
 			break ;
 		if (g_interrupted)
@@ -74,8 +74,6 @@ int	main()
 		ast = parse(src);
 		if (ast)
 		{
-			// print_ast(ast, "", true);
-			// free_ast_node(ast);
 			int s = exec(ast);
 			printf("--exit status: %d--\n", s);
 			free_ast_node(ast);

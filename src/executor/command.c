@@ -25,10 +25,7 @@ int	exec_command(t_executor *executor, t_cmd *cmd, t_ctx *ctx)
 		dup2(ctx->fd[STDOUT_FILENO], STDOUT_FILENO);
 		if (ctx->fd_close >= 0)
 			close(ctx->fd_close);
-		int count = word_list_to_arr(cmd->args, NULL);
-		char *dest[count + 1];
-		word_list_to_arr(cmd->args, dest);
-		execvp(cmd->name->str, dest);
+		execvp(cmd->name->str, (char **){NULL});
 		perror("minishell: ");
 		exit(127);
 	}

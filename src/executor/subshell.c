@@ -16,6 +16,8 @@ int	exec_subshell(t_executor *executor, t_ast_node *node, t_ctx *ctx)
 {
 	int	status;
 
+	(void)executor;
+	(void)ctx;
 	status = exec(node->u_content.subshell);
 	return (status);
 }

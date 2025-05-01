@@ -54,7 +54,7 @@ int	exec_node(t_executor *executor, t_ast_node *node, t_ctx *ctx)
 		pid = exec_command(executor, node->u_content.cmd, ctx);
 		if (ctx->fd[STDOUT_FILENO] == STDOUT_FILENO
 			&& ctx->fd[STDIN_FILENO] == STDIN_FILENO)
-			waitpid(pid, &status, 0);
+			status = wait_for_child(executor, pid);
 	}
 	return (status);
 }
