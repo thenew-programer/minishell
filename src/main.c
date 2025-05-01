@@ -74,11 +74,11 @@ int	main()
 		ast = parse(src);
 		if (ast)
 		{
-			print_ast(ast, "", true);
-			free_ast_node(ast);
-			// int s = exec(ast);
-			// printf("--exit status: %d--\n", s);
+			// print_ast(ast, "", true);
 			// free_ast_node(ast);
+			int s = exec(ast);
+			printf("--exit status: %d--\n", s);
+			free_ast_node(ast);
 		}
 		add_history(src);
 		free(src);

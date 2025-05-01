@@ -6,7 +6,7 @@
 /*   By: ybouryal <ybouryal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 14:56:35 by ybouryal          #+#    #+#             */
-/*   Updated: 2025/04/27 14:58:47 by ybouryal         ###   ########.fr       */
+/*   Updated: 2025/04/30 10:02:16 by ybouryal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,12 @@
 
 # include "../parser/parser.h"
 
+extern char **environ;
+
 typedef struct s_env
 {
-	t_word	*name;
-	t_word	*value;
+	char	*name;
+	char	*value;
 }	t_env;
 
 typedef struct s_env_list

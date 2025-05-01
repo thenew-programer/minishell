@@ -12,7 +12,10 @@
 
 #include "exec.h"
 
-int	exec_subshell(t_ast_node *node)
+int	exec_subshell(t_executor *executor, t_ast_node *node, t_ctx *ctx)
 {
-	return (exec(node->u_content.subshell));
+	int	status;
+
+	status = exec(node->u_content.subshell);
+	return (status);
 }
