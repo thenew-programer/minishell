@@ -6,7 +6,7 @@
 /*   By: ybouryal <ybouryal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 05:42:13 by ybouryal          #+#    #+#             */
-/*   Updated: 2025/04/23 16:04:33 by ybouryal         ###   ########.fr       */
+/*   Updated: 2025/05/03 09:47:52 by ybouryal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void		free_word_list(t_word_list *head);
 int			word_list_to_arr(t_word_list *word_list, char **dest);
 
 /* parser.c */
-t_ast_node	*parse(const char *src);
+t_ast_node	*parse(const char *src, int *lstatus);
 void		parser_advance(t_parser *parser);
 int			parser_match(t_parser *parser, t_token_type type);
 void		init_parser(t_parser *parser, t_scanner *scanner);

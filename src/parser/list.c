@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "parser.h"
-#include <stdio.h>
 
 #define MAX_COMMANDS 100
 
@@ -23,9 +22,9 @@ void	free_node_list(t_ast_node *node)
 
 	if (!node->u_content.s_list.commands)
 		return ;
-	i = -1;
-	while (++i < node->u_content.s_list.count)
-		free_ast_node(node->u_content.s_list.commands[i]);
+	i = 0;
+	while (i < node->u_content.s_list.count)
+		free_ast_node(node->u_content.s_list.commands[i++]);
 	free(node->u_content.s_list.commands);
 }
 
@@ -44,13 +43,13 @@ t_ast_node	*parse_list(t_parser *parser)
 	while (parser_match(parser, TOKEN_SEMICOLAN))
 	{
 		if (parser->curr.type == TOKEN_EOF)
-			return (make_error(parser, "", 2), list);
+			return (list);
 		if (list->u_content.s_list.count == list->u_content.s_list.size)
 			if (extend_commands(list) == NULL)
-				return (free_ast_node(node), NULL);
+				return (free_ast_node(list), NULL);
 		node = parse_logical(parser);
 		if (!node)
-			return (free_ast_node(node), NULL);
+			return (free_ast_node(list), NULL);
 		list->u_content.s_list.commands[list->u_content.s_list.count++] = node;
 	}
 	return (list);

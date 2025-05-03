@@ -62,7 +62,6 @@ t_redir_list	*parse_redir(t_redir_list **list, t_parser *parser)
 			if (!new)
 				return (free(filename), NULL);
 			*list = append_redir_list(*list, new);
-			parser_advance(parser);
 			return (*list);
 		}
 		make_error(parser, "", 2);
@@ -79,7 +78,7 @@ void	free_redir_list(t_redir_list *list)
 	while (list)
 	{
 		next = list->next;
-		free(list->filename);
+		free_word(list->filename);
 		free(list);
 		list = next;
 	}

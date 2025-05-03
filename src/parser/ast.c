@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "parser.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 static t_ast_node	*init_ast(t_ast_node *node, t_node_type type);
 

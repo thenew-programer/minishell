@@ -47,10 +47,9 @@ t_word	*parse_word(t_parser *parser)
 
 	if (parser->curr.type == TOKEN_WORD)
 	{
-		str = malloc(sizeof(char) * parser->curr.len + 1);
+		str = ft_strndup(parser->curr.start, parser->curr.len);
 		if (!str)
-			return (NULL);
-		str = strndup(parser->curr.start, parser->curr.len);
+			return (make_error(parser, "ressources error", 1), NULL);
 		parser_advance(parser);
 		return (new_word(str, TOKEN_WORD));
 	}
@@ -58,6 +57,8 @@ t_word	*parse_word(t_parser *parser)
 		return (parse_sqword(parser));
 	else if (parser->curr.type == TOKEN_DQ_WORD)
 		return (parse_dqword(parser));
+	else if (parser->curr.type == TOKEN_ERROR)
+		make_error(parser, "", 2);
 	return (NULL);
 }
 
@@ -66,13 +67,10 @@ static t_word	*parse_dqword(t_parser *parser)
 	char	*str;
 
 	if (parser->curr.start[parser->curr.len - 1] != '"' && !parser->has_error)
-	{
-		make_error(parser, "", 0);
-		return (NULL);
-	}
-	str = strndup(parser->curr.start + 1, parser->curr.len - 2);
+		return (make_error(parser, "", 2), NULL);
+	str = ft_strndup(parser->curr.start + 1, parser->curr.len - 2);
 	if (!str)
-		return (NULL);
+		return (make_error(parser, "ressource error", 1), NULL);
 	parser_advance(parser);
 	return (new_word(str, TOKEN_DQ_WORD));
 }
@@ -82,13 +80,10 @@ static t_word	*parse_sqword(t_parser *parser)
 	char	*str;
 
 	if (parser->curr.start[parser->curr.len - 1] != '\'' && !parser->has_error)
-	{
-		make_error(parser, "", 0);
-		return (NULL);
-	}
-	str = strndup(parser->curr.start + 1, parser->curr.len - 2);
+		return (make_error(parser, "", 2), NULL);
+	str = ft_strndup(parser->curr.start + 1, parser->curr.len - 2);
 	if (!str)
-		return (NULL);
+		return (make_error(parser, "ressource error", 1), NULL);
 	parser_advance(parser);
 	return (new_word(str, TOKEN_SQ_WORD));
 

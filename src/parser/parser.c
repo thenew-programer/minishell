@@ -37,7 +37,7 @@ int	parser_match(t_parser *parser, t_token_type type)
 	return (0);
 }
 
-t_ast_node	*parse(const char *src)
+t_ast_node	*parse(const char *src, int *status)
 {
 	t_parser	parser;
 	t_scanner	scanner;
@@ -48,7 +48,9 @@ t_ast_node	*parse(const char *src)
 	ast = parse_list(&parser);
 	if (parser.has_error) {
 		print_error(&parser);
+		*status = parser.error.code;
 		return (free_ast_node(ast), NULL);
 	}
+	*status = 0;
 	return (ast);
 }
