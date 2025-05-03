@@ -12,7 +12,7 @@
 
 #include "exec.h"
 
-static int	init_executor(t_executor *executor);
+static void	init_executor(t_executor *executor);
 static void	free_executor(t_executor *executor);
 
 int	exec(t_ast_node *ast)
@@ -23,13 +23,15 @@ int	exec(t_ast_node *ast)
 
 	if (!ast)
 		return (0);
-	if (init_executor(&executor) == -1)
-		return (-1);
+	init_executor(&executor);
+	if (executor.has_error)
+		return (make_exec_error(&executor, "malloc() failed", MALLOC_ERROR),
+			print_exec_error(&executor));
 	ctx = (t_ctx){{0, 1}, -1};
 	status = exec_node(&executor, ast, &ctx);
-	if (executor.childs_count > 0)
-		status = wait_for_children(&executor);
 	free_executor(&executor);
+	if (executor.has_error)
+		return (print_exec_error(&executor));
 	return (WEXITSTATUS(status));
 }
 
@@ -38,7 +40,8 @@ int	exec_node(t_executor *executor, t_ast_node *node, t_ctx *ctx)
 	int	status;
 	int	pid;
 
-	pid = 0;
+	if (executor->has_error)
+		return (executor->error.code);
 	if (!node)
 		return (0);
 	if (node->type == NODE_LIST)
@@ -59,15 +62,14 @@ int	exec_node(t_executor *executor, t_ast_node *node, t_ctx *ctx)
 	return (status);
 }
 
-static int init_executor(t_executor *executor)
+static void	init_executor(t_executor *executor)
 {
+	executor->has_error = 0;
 	executor->childs = malloc(sizeof(int) * MAX_CHILDS);
 	if (!executor->childs)
-		return (-1);
+		make_exec_error(executor, "malloc() failed", MALLOC_ERROR);
 	executor->childs_count = 0;
 	executor->childs_capacity = MAX_CHILDS;
-	executor->has_error = 0;
-	return (0);
 }
 
 static void	free_executor(t_executor *executor)

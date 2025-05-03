@@ -6,7 +6,7 @@
 /*   By: ybouryal <ybouryal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 14:29:29 by ybouryal          #+#    #+#             */
-/*   Updated: 2025/05/01 11:10:41 by ybouryal         ###   ########.fr       */
+/*   Updated: 2025/05/03 09:49:16 by ybouryal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <stdlib.h>
+# include <errno.h>
 
 # define MAX_CHILDS 16
 
@@ -40,13 +41,24 @@ typedef struct s_executor
 	int			childs_capacity;
 }	t_executor;
 
+typedef enum e_error_code
+{
+	EXECVE_ERROR = 4,
+	MALLOC_ERROR,
+	DUP2_ERROR,
+	FORK_ERROR,
+	PIPE_ERROR,
+	OPEN_ERROR,
+}	t_error_code;
+
 /* exec.c */
 int		exec(t_ast_node *ast);
 int		exec_node(t_executor *executor, t_ast_node *node, t_ctx *ctx);
 
 /* error.c */
 void	make_exec_error(t_executor *executor, const char *msg, int code);
-void	print_exec_error(t_executor *executor);
+int		print_exec_error(t_executor *executor);
+int		set_error(t_executor *executor, int status);
 
 /* list.c */
 int		exec_list(t_executor *executor, t_ast_node *node, t_ctx *ctx);
@@ -68,5 +80,12 @@ int 	exec_command(t_executor *executor, t_cmd *cmd, t_ctx *ctx);
 void	add_child(t_executor *executor, int pid);
 int		wait_for_children(t_executor *executor);
 int		wait_for_child(t_executor *executor, int pid);
+
+/* redir.c */
+int		apply_redirections(t_redir_list *redir, t_ctx *ctx);
+
+
+/* heredoc.c */
+int		handle_heredoc(t_redir_list *redir, t_ctx *ctx);
 
 #endif /* EXEC_H */

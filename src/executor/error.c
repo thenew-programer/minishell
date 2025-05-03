@@ -21,10 +21,28 @@ void	make_exec_error(t_executor *executor, const char *msg, int code)
 	executor->error.code = code;
 }
 
-void	print_exec_error(t_executor *executor)
+int	print_exec_error(t_executor *executor)
 {
-	if (!executor->has_error)
-		return ;
 	fprintf(stderr, "minishell: %s\n", executor->error.msg);
+	return (executor->error.code);
+}
 
+int	set_error(t_executor *executor, int status)
+{
+	if (status == DUP2_ERROR)
+		return (make_exec_error(executor, "dup2() failed", DUP2_ERROR),
+			DUP2_ERROR);
+	if (status == PIPE_ERROR)
+		return (make_exec_error(executor, "pipe() failed", PIPE_ERROR),
+			PIPE_ERROR);
+	if (status == MALLOC_ERROR)
+		return (make_exec_error(executor, "malloc() failed", MALLOC_ERROR),
+			MALLOC_ERROR);
+	if (status == FORK_ERROR)
+		return (make_exec_error(executor, "fork() failed", FORK_ERROR),
+			FORK_ERROR);
+	if (status == OPEN_ERROR)
+		return (make_exec_error(executor, "open() failed", OPEN_ERROR),
+			OPEN_ERROR);
+	return (0);
 }

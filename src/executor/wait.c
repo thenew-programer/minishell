@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "exec.h"
-#include <sys/wait.h>
+#include <stdlib.h>
 
 void	add_child(t_executor *executor, int pid)
 {
@@ -37,12 +37,18 @@ int	wait_for_children(t_executor *executor)
 {
 	int	status;
 	int	i;
+	int	err_code;
 
 	i = 0;
 	status = 0;
 	while (i < executor->childs_count)
 	{
 		waitpid(executor->childs[i], &status, 0);
+		err_code = set_error(executor, WEXITSTATUS(status));
+		if (err_code)
+			return (err_code);
+		// if (WEXITSTATUS(status) == DUP2_ERROR)
+		// 	make_exec_error(executor, "dup2() failed", DUP2_ERROR);
 		i++;
 	}
 	executor->childs_count = 0;
@@ -53,6 +59,7 @@ int	wait_for_child(t_executor *executor, int pid)
 {
 	int	i;
 	int	status;
+	int	err_code;
 
 	status = 0;
 	i = -1;
@@ -62,6 +69,11 @@ int	wait_for_child(t_executor *executor, int pid)
 	if (i < executor->childs_count)
 	{
 		waitpid(pid, &status, 0);
+		err_code = set_error(executor, WEXITSTATUS(status));
+		if (err_code)
+			return (err_code);
+		// if (WEXITSTATUS(status) == DUP2_ERROR)
+		// 	make_exec_error(executor, "dup2() failed", DUP2_ERROR);
 		while (i < executor->childs_count - 1)
 		{
 			executor->childs[i] = executor->childs[i + 1];
