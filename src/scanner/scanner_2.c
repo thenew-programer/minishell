@@ -49,6 +49,8 @@ t_token	string(t_scanner *scanner, int delim)
 			scanner->line++;
 		advance(scanner);
 	}
+	// if (is_atend(scanner))
+	// 	return (make_token(scanner, TOKEN_ERROR));
 	advance(scanner);
 	type = TOKEN_SQ_WORD;
 	if (delim == '"')
