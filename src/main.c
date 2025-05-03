@@ -10,11 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor/exec.h"
 #include "minishell.h"
-#include "parser/parser.h"
-#include <readline/history.h>
-#include <readline/readline.h>
 
 sig_atomic_t	g_interrupted;
 
@@ -28,7 +24,7 @@ void	sig_handler(int sig)
 		rl_replace_line("", 0);
 		write(STDOUT_FILENO, "\n", 1);
 		rl_on_new_line();
-		// rl_set_prompt("$> ");
+		rl_set_prompt("$> ");
 		rl_redisplay();
 	}
 }
@@ -44,11 +40,11 @@ int	main()
 {
 	char		*src;
 	t_ast_node	*ast;
+	int			lstatus;
 
 	init();
 	while (1)
 	{
-		// src = readline("$> ");
 		src = prompt();
 		if (!src)
 			break ;
@@ -71,17 +67,20 @@ int	main()
 			}
 		}
 
-		ast = parse(src);
+		ast = parse(src, &lstatus);
+		if (lstatus == 1)
+			break ;
 		if (ast)
 		{
-			int s = exec(ast);
-			printf("--exit status: %d--\n", s);
+			lstatus = exec(ast);
 			free_ast_node(ast);
+			if (lstatus >= EXECVE_ERROR && lstatus <= OPEN_ERROR)
+				break ;
 		}
 		add_history(src);
 		free(src);
 	}
 	printf("exit\n");
 	rl_clear_history();
-	return (0);
+	return (lstatus);
 }

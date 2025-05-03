@@ -25,6 +25,11 @@
 
 extern sig_atomic_t	g_interrupted;
 
+typedef struct s_shell
+{
+	int	lstatus;
+}	t_shell;
+
 char	*prompt(void);
 
 #endif /* MINISHELL_H */
