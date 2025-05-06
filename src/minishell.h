@@ -6,7 +6,7 @@
 /*   By: ybouryal <ybouryal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 05:39:57 by ybouryal          #+#    #+#             */
-/*   Updated: 2025/04/25 11:01:56 by ybouryal         ###   ########.fr       */
+/*   Updated: 2025/05/06 11:04:12 by ybouryal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,19 @@
 # include <signal.h>
 # include <stdio.h>
 
-extern sig_atomic_t	g_interrupted;
+# define PROMPT	" $> "
+
+extern sig_atomic_t	g_interrupt;
 
 typedef struct s_shell
 {
 	int	lstatus;
 }	t_shell;
 
-char	*prompt(void);
+/* prompt.c */
+char	*prompt(char *p);
+
+/* init.c */
+void	init(void);
 
 #endif /* MINISHELL_H */

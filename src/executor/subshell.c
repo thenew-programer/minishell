@@ -14,10 +14,23 @@
 
 int	exec_subshell(t_executor *executor, t_ast_node *node, t_ctx *ctx)
 {
-	int	status;
+	int			status;
+	t_env_list	*env_list;
+	t_ctx		s_ctx;
+	int			pid;
 
-	(void)executor;
-	(void)ctx;
-	status = exec(node->u_content.subshell);
+	pid = fork();
+	if (pid == -1)
+		return (make_exec_error(executor, "fork() failed", FORK_ERROR), FORK_ERROR);
+	else if (pid == 0)
+	{
+		s_ctx = *ctx;
+		apply_redirections(node->redir, &s_ctx);
+		env_list = env();
+		status = exec(node->u_content.subshell, env_list);
+		free_env_list(env_list);
+		exit(status);
+	}
+	waitpid(pid, &status, 0);
 	return (status);
 }

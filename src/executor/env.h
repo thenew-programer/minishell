@@ -29,4 +29,11 @@ typedef struct s_env_list
 	struct s_env_list	*next;
 }	t_env_list;
 
+/* env.c */
+char		*get_env_value(t_env_list *env, char *str, int len);
+int			set_env(t_env_list *list, char *env_var);
+t_env		*get_env(t_env_list *list, char *name);
+void		free_env_list(t_env_list *list);
+t_env_list	*env(void);
+
 #endif /* ENV_H */

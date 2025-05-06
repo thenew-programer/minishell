@@ -2,7 +2,7 @@
 
 <statement>         ::= <command>
                       | <pipeline>
-                      | <assignment>
+					  | <subshell>
 
 <command>           ::= <word> <argument_list>? <redirection_list>?
 
@@ -15,9 +15,9 @@
 					  |  '>>' <word>
 					  |  '<<' <word>
 
-<assignment>        ::= <identifier> '=' <word>
-
 <pipeline>          ::= <command> ('|' <command>)+
+
+<subshell>			::= <redirection_list>? '(' <statement> ')' <redirection_list>?
 
 <name>              ::= <identifier>
 

@@ -12,10 +12,10 @@
 
 #include "exec.h"
 
-static void	init_executor(t_executor *executor);
+static void	init_executor(t_executor *executor, t_env_list *env);
 static void	free_executor(t_executor *executor);
 
-int	exec(t_ast_node *ast)
+int	exec(t_ast_node *ast, t_env_list *env)
 {
 	t_executor	executor;
 	int			status;
@@ -23,7 +23,7 @@ int	exec(t_ast_node *ast)
 
 	if (!ast)
 		return (0);
-	init_executor(&executor);
+	init_executor(&executor, env);
 	if (executor.has_error)
 		return (make_exec_error(&executor, "malloc() failed", MALLOC_ERROR),
 			print_exec_error(&executor));
@@ -62,7 +62,7 @@ int	exec_node(t_executor *executor, t_ast_node *node, t_ctx *ctx)
 	return (status);
 }
 
-static void	init_executor(t_executor *executor)
+static void	init_executor(t_executor *executor, t_env_list *env)
 {
 	executor->has_error = 0;
 	executor->childs = malloc(sizeof(int) * MAX_CHILDS);
@@ -70,6 +70,7 @@ static void	init_executor(t_executor *executor)
 		make_exec_error(executor, "malloc() failed", MALLOC_ERROR);
 	executor->childs_count = 0;
 	executor->childs_capacity = MAX_CHILDS;
+	executor->env = env;
 }
 
 static void	free_executor(t_executor *executor)

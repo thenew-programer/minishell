@@ -22,6 +22,7 @@ t_ast_node	*create_ast_node(t_node_type type)
 	if (!node)
 		return (NULL);
 	node->type = type;
+	node->redir = NULL;
 	return (init_ast(node, type));
 }
 
@@ -47,6 +48,8 @@ void	free_ast_node(t_ast_node *root)
 	}
 	else if (root->type == NODE_BACKGROUND)
 		free_ast_node(root->u_content.s_background.cmd);
+	if (root->redir)
+		free_redir_list(root->redir);
 	free(root);
 }
 

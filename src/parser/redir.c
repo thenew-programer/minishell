@@ -60,13 +60,13 @@ t_redir_list	*parse_redir(t_redir_list **list, t_parser *parser)
 				return (NULL);
 			new = new_redir_list(type, filename);
 			if (!new)
-				return (free(filename), NULL);
+				return (free(filename), *list);
 			*list = append_redir_list(*list, new);
 			return (*list);
 		}
 		make_error(parser, "", 2);
 	}
-	return (NULL);
+	return (*list);
 }
 
 void	free_redir_list(t_redir_list *list)

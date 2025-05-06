@@ -16,7 +16,7 @@ BOLD		:= $(shell tput bold);
 RESET		:= $(shell tput -Txterm sgr0)
 
 CC			= cc
-CFLAGS		= -Wall -Werror -Wextra -g
+CFLAGS		= -Wall -Werror -Wextra -g -fsanitize=address
 LDFLAGS		= -lreadline
 RM			= rm -rf
 

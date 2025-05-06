@@ -62,7 +62,7 @@ static int	simple_redir(t_redir_list *redir, t_ctx *ctx)
 	close(fd);
 	if (redir->type == REDIR_IN)
 		ctx->fd[STDIN_FILENO] = STDIN_FILENO;
-	if (redir->type == REDIR_OUT)
+	if (redir->type == REDIR_OUT || redir->type == APPEND_OUT)
 		ctx->fd[STDOUT_FILENO] = STDOUT_FILENO;
 	return (0);
 }
@@ -81,36 +81,3 @@ static int	open_file(char *filename, t_redir_type type)
 		fd = -1;
 	return (fd);
 }
-/*
-
-		if (redir->type == REDIR_IN)
-		{
-			fd = open(redir->filename->str, O_RDONLY);
-			if (fd == -1)
-				return (OPEN_ERROR);
-			if (dup2(fd, STDIN_FILENO) == -1)
-				return (close(fd), DUP2_ERROR);
-			close(fd);
-			redir_in = 1;
-		}
-		else if (redir->type == REDIR_OUT)
-		{
-			fd = open(redir->filename->str, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			if (fd == -1)
-				return (OPEN_ERROR);
-			if (dup2(fd, STDIN_FILENO) == -1)
-				return (close(fd), DUP2_ERROR);
-			close(fd);
-			redir_out = 1;
-		}
-		else if (redir->type == APPEND_OUT)
-		{
-			fd = open(redir->filename->str, O_WRONLY | O_CREAT | O_APPEND, 0644);
-			if (fd == -1)
-				return (OPEN_ERROR);
-			if (dup2(fd, STDIN_FILENO) == -1)
-				return (close(fd), DUP2_ERROR);
-			close(fd);
-			redir_out = 1;
-		}
-*/

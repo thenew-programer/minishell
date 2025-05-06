@@ -6,7 +6,7 @@
 /*   By: ybouryal <ybouryal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 14:29:29 by ybouryal          #+#    #+#             */
-/*   Updated: 2025/05/03 09:49:16 by ybouryal         ###   ########.fr       */
+/*   Updated: 2025/05/03 14:28:59 by ybouryal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ typedef enum e_error_code
 }	t_error_code;
 
 /* exec.c */
-int		exec(t_ast_node *ast);
+int		exec(t_ast_node *ast, t_env_list *env);
 int		exec_node(t_executor *executor, t_ast_node *node, t_ctx *ctx);
 
 /* error.c */
@@ -84,8 +84,10 @@ int		wait_for_child(t_executor *executor, int pid);
 /* redir.c */
 int		apply_redirections(t_redir_list *redir, t_ctx *ctx);
 
-
 /* heredoc.c */
 int		handle_heredoc(t_redir_list *redir, t_ctx *ctx);
+
+/* args.c */
+char	**prepare_args(t_executor *executor, t_cmd *cmd);
 
 #endif /* EXEC_H */

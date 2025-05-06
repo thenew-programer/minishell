@@ -1,25 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ybouryal <ybouryal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/22 18:14:18 by ybouryal          #+#    #+#             */
-/*   Updated: 2024/10/22 18:17:43 by ybouryal         ###   ########.fr       */
+/*   Created: 2025/05/06 11:03:16 by ybouryal          #+#    #+#             */
+/*   Updated: 2025/05/06 11:03:51 by ybouryal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-size_t	ft_strlen(const char *str)
+sig_atomic_t	g_interrupt;
+
+void	sig_handler(int sig)
 {
-	size_t	i;
+	if (sig == SIGINT)
+	{
+		g_interrupt = 1;
 
-	if (!str)
-		return (0);
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
+		rl_done = 1;
+		rl_replace_line("", 0);
+		write(STDOUT_FILENO, "\n", 1);
+		rl_on_new_line();
+		rl_set_prompt(PROMPT);
+		rl_redisplay();
+	}
 }
+
+void	init(void)
+{
+	g_interrupt = 0;
+	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, sig_handler);
+}
+

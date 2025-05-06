@@ -14,17 +14,18 @@
 
 static char	*read_full_line(const char *prompt);
 
-char	*prompt(void)
+char	*prompt(char *p)
 {
-	char	*prompt;
+	char	*pwd;
 	char	*src;
 
-	// TODO: Customize the prompt
-	prompt = NULL;
-	src = read_full_line(prompt);
+	pwd = getcwd(NULL, 0);
+	p = ft_strjoin(pwd , p);
+	free(pwd);
+	src = read_full_line(p);
+	free(p);
 	return (src);
 }
-
 
 static char	*read_full_line(const char *prompt)
 {
@@ -63,8 +64,7 @@ static char	*read_full_line(const char *prompt)
 			if (!line)
 			{
 				fprintf(stderr, "minishell: syntax error: unexpected end of file\n");
-				free(full_line);
-				return (NULL);
+				return (free(full_line), NULL);
 			}
 			if (g_interrupted)
 				return (free(line), full_line);
@@ -74,9 +74,6 @@ static char	*read_full_line(const char *prompt)
 		full_line = ft_strjoin(full_line, line);
 		free(line);
 		if (!full_line)
-		{
-			fprintf(stderr, "minishell: malloc error\n");
-			return (NULL);
-		}
+			return (fprintf(stderr, "minishell: malloc error\n"), NULL);
 	}
 }

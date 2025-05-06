@@ -11,15 +11,28 @@
 /* ************************************************************************** */
 
 #include "env.h"
-#include <string.h>
 
 static t_env_list	*append_env(t_env_list *env_list, t_env_list *new_env_list);
 static t_env_list	*new_env_list(char *env);
-static void			free_env_list(t_env_list *list);
 static void			free_env_var(t_env *env_var);
 t_env				*prepare_env_var(char *env_var);
 t_env				*get_env(t_env_list *list, char *name);
 int					set_env(t_env_list *list, char *env_var);
+
+char	*get_env_value(t_env_list *env, char *str, int len)
+{
+	t_env	*entry;
+	char	*key;
+
+	key = ft_strndup(str, len);
+	if (!key)
+		return (ft_strdup(""));
+	entry = get_env(env, key);
+	free(key);
+	if (!entry || !entry->value)
+		return (ft_strdup(""));
+	return (ft_strdup(entry->value));
+}
 
 int	set_env(t_env_list *list, char *env_var)
 {
@@ -86,10 +99,10 @@ static t_env_list	*append_env(t_env_list *env_list, t_env_list *new_env_list)
 {
 	t_env_list	*curr;
 
-	if (!env_list)
+	if (NULL == env_list)
 		return (new_env_list);
 	curr = env_list;
-	while (curr->next)
+	while (curr->next != NULL)
 		curr = curr->next;
 	curr->next = new_env_list;
 	return (env_list);
@@ -110,7 +123,7 @@ t_env	*prepare_env_var(char *env_var)
 	l = 0;
 	while (env_var[l] != '=' && env_var[l] != '\0')
 		l++;
-	name = strndup(env_var, l);
+	name = ft_strndup(env_var, l);
 	if (!name)
 		return (free(env_elm), NULL);
 	value = ft_strdup(env_var + l + 1);
@@ -131,6 +144,7 @@ static t_env_list	*new_env_list(char *env_var)
 	env_list->var = prepare_env_var(env_var);
 	if (!env_list->var)
 		return (free(env_list), NULL);
+	env_list->next = NULL;
 	return (env_list);
 }
 
@@ -142,9 +156,11 @@ static void	free_env_var(t_env *env_var)
 	free(env_var->value);
 	free(env_var);
 }
-static void	free_env_list(t_env_list *list)
+
+void	free_env_list(t_env_list *list)
 {
 	t_env_list	*next;
+
 	if (!list)
 		return ;
 	while (list)

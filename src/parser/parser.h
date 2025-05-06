@@ -67,7 +67,8 @@ typedef struct s_cmd
 
 struct s_astnode
 {
-	t_node_type	type;
+	t_node_type			type;
+	t_redir_list		*redir;
 	union
 	{
 		t_cmd			*cmd;
@@ -81,17 +82,17 @@ struct s_astnode
 		{
 			t_ast_node	*left;
 			t_ast_node	*right;
-		}s_binary;
+		}				s_binary;
 		struct
 		{
 			t_ast_node	*cmd;
-		}s_background;
+		}				s_background;
 		struct
 		{
 			t_ast_node	**commands;
 			int			count;
 			int			size;
-		}s_list;
+		}				s_list;
 	}u_content;
 };
 

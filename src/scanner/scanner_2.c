@@ -23,18 +23,11 @@ t_token	make_token(t_scanner *scanner, t_token_type type)
 	return (token);
 }
 
-t_token	number(t_scanner *scanner)
-{
-	while (!is_atend(scanner) && ft_isdigit(peek(scanner)))
-		advance(scanner);
-	return (make_token(scanner, TOKEN_NBR));
-}
-
 t_token	word(t_scanner *scanner)
 {
-	while ((is_alpha(peek(scanner)) || ft_isdigit(peek(scanner))
-			|| peek(scanner) == '_' || peek(scanner) == '-'
-			|| peek(scanner) == '$') && !is_atend(scanner))
+	while ((ft_isalnum(peek(scanner)) || peek(scanner) == '_'
+			|| peek(scanner) == '-' || peek(scanner) == '$'
+			|| peek(scanner) == '=') && !is_atend(scanner))
 		advance(scanner);
 	return (make_token(scanner, TOKEN_WORD));
 }
