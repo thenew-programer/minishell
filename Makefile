@@ -33,7 +33,7 @@ LIBFT		= $(LIBFT_DIR)/libft.a
 # BSRCS		= $(addprefix $(BSRCS_DIR)/, $(BFILES))
 # BOBJS		= $(patsubst $(BSRCS_DIR)/%.c, $(BOBJS_DIR)/%.o, $(BSRCS))
 
-SRCS		= src/main.c src/prompt.c
+SRCS		= src/main.c src/prompt.c src/init.c src/repl.c
 PARSER		= $(wildcard $(SRCS_DIR)/parser/*.c)
 SCANNER		= $(wildcard $(SRCS_DIR)/scanner/*.c)
 EXECUTOR	= $(wildcard $(SRCS_DIR)/executor/*.c)
