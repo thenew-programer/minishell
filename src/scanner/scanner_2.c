@@ -25,9 +25,8 @@ t_token	make_token(t_scanner *scanner, t_token_type type)
 
 t_token	word(t_scanner *scanner)
 {
-	while ((ft_isalnum(peek(scanner)) || peek(scanner) == '_'
-			|| peek(scanner) == '-' || peek(scanner) == '$'
-			|| peek(scanner) == '=') && !is_atend(scanner))
+	while (!ft_strchr("><()&|", peek(scanner)) && !ft_isspace(peek(scanner))
+		&& !is_atend(scanner))
 		advance(scanner);
 	return (make_token(scanner, TOKEN_WORD));
 }
@@ -42,8 +41,6 @@ t_token	string(t_scanner *scanner, int delim)
 			scanner->line++;
 		advance(scanner);
 	}
-	// if (is_atend(scanner))
-	// 	return (make_token(scanner, TOKEN_ERROR));
 	advance(scanner);
 	type = TOKEN_SQ_WORD;
 	if (delim == '"')

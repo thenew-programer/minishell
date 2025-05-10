@@ -14,7 +14,6 @@
 
 static t_token	tokenize_sym(t_scanner *scanner, char c);
 static t_token	tokenize(t_scanner *scanner, char c);
-static t_token	tokenize_redir(t_scanner *scanner, char c);
 
 t_token	scan_token(t_scanner *scanner)
 {
@@ -58,36 +57,30 @@ static t_token	tokenize_sym(t_scanner *scanner, char c)
 		return (make_token(scanner, TOKEN_SEMICOLAN));
 	else if (c == '"')
 		return (string(scanner, '"'));
-	else
-		return (string(scanner, '\''));
-}
-
-static t_token	tokenize_redir(t_scanner *scanner, char c)
-{
-	if (c == '>')
+	else if (c == '>')
 	{
 		if (peek(scanner) == '>')
 			return (advance(scanner), make_token(scanner, TOKEN_APPEND_OUT));
 		else
 			return (make_token(scanner, TOKEN_REDIR_OUT));
 	}
-	else
+	else if (c == '<')
 	{
 		if (peek(scanner) == '<')
 			return (advance(scanner), make_token(scanner, TOKEN_HEREDOC));
 		else
 			return (make_token(scanner, TOKEN_REDIR_IN));
 	}
+	else
+		return (string(scanner, '\''));
 }
 
 static t_token	tokenize(t_scanner *scanner, char c)
 {
 	while (1)
 	{
-		if (ft_strchr("();\"'", c))
+		if (ft_strchr("();\"'><", c))
 			return (tokenize_sym(scanner, c));
-		else if (ft_strchr("><", c))
-			return (tokenize_redir(scanner, c));
 		else if (c == '|')
 		{
 			if (peek(scanner) == '|')
@@ -100,7 +93,7 @@ static t_token	tokenize(t_scanner *scanner, char c)
 			if (peek(scanner) == '&')
 				return (advance(scanner), make_token(scanner, TOKEN_AND_AND));
 			else
-				return (make_token(scanner, TOKEN_AND));
+				return (make_token(scanner, TOKEN_ERROR));
 		}
 		else
 			return (word(scanner));
