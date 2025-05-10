@@ -14,36 +14,36 @@
 
 static int	handle_interrupt(char *src);
 static int	is_empty_line(char *src);
-static int	should_exit(t_ast_node *ast, int lstatus);
-static int	execute_if_valid(t_ast_node *ast, t_env_list *env_list, int prev_status);
-static void	cleanup(t_env_list *env_list);
+static void	cleanup(t_env *env_list);
 
 int repl(void)
 {
 	char		*src;
 	t_ast_node	*ast;
 	int			lstatus;
-	t_env_list	*env_list;
+	t_env		env;
 
+	new_env(&env);
 	init();
-	env_list = env();
 	while (1)
 	{
-		src = prompt(PROMPT);
+		src = prompt();
 		if (!src)
 			break ;
-		if (handle_interrupt(src))
-			continue;
-		if (is_empty_line(src))
+		if (handle_interrupt(src) || is_empty_line(src))
 			continue;
 		ast = parse(src, &lstatus);
-		if (should_exit(ast, lstatus))
-			break;
-		lstatus = execute_if_valid(ast, env_list, lstatus);
+		if (ast)
+		{
+			lstatus = exec(ast, &env);
+			free_ast_node(ast);
+			if (lstatus >= EXECVE_ERROR && lstatus <= PIPE_ERROR)
+				break ;
+		}
 		add_history(src);
 		free(src);
 	}
-	cleanup(env_list);
+	cleanup(&env);
 	return lstatus;
 }
 
@@ -73,25 +73,10 @@ static int	is_empty_line(char *src)
 	return (1);
 }
 
-static int	should_exit(t_ast_node *ast, int lstatus)
+static void	cleanup(t_env *env_list)
 {
-	return (ast && lstatus >= EXECVE_ERROR && lstatus <= OPEN_ERROR);
-}
-
-static int	execute_if_valid(t_ast_node *ast, t_env_list *env_list, int prev_status)
-{
-	int status = prev_status;
-	if (ast)
-	{
-		status = exec(ast, env_list);
-		free_ast_node(ast);
-	}
-	return (status);
-}
-
-static void	cleanup(t_env_list *env_list)
-{
-	printf("exit\n");
-	free_env_list(env_list);
+	if (isatty(STDIN_FILENO))
+		printf("exit\n");
+	free_env(env_list);
 	rl_clear_history();
 }

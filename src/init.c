@@ -19,12 +19,9 @@ void	sig_handler(int sig)
 	if (sig == SIGINT)
 	{
 		g_interrupt = 1;
-
-		rl_done = 1;
-		rl_replace_line("", 0);
 		write(STDOUT_FILENO, "\n", 1);
+		rl_replace_line("", 0);
 		rl_on_new_line();
-		rl_set_prompt(PROMPT);
 		rl_redisplay();
 	}
 }

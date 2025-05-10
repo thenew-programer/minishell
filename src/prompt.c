@@ -12,68 +12,80 @@
 
 #include "minishell.h"
 
-static char	*read_full_line(const char *prompt);
+#define EOF_ERROR "minishell: syntax error: unexpected end of file\n"
+#define M_ERROR "minishell: malloc error\n"
 
-char	*prompt(char *p)
+static char	*read_full_line(void);
+static char	*append_line(char *full, char *line);
+static int	is_line_atend(char *full);
+
+char	*prompt(void)
 {
-	char	*pwd;
 	char	*src;
 
-	pwd = getcwd(NULL, 0);
-	p = ft_strjoin(pwd , p);
-	free(pwd);
-	src = read_full_line(p);
-	free(p);
+	src = read_full_line();
 	return (src);
 }
 
-static char	*read_full_line(const char *prompt)
+static char	*read_full_line(void)
 {
 	char	*line;
-	char	*full_line;
+	char	*full;
 	int		idx;
-	int		tmp;
 
-	if (!prompt)
-		prompt = "$> ";
-	line = readline(prompt);
-	if (!line)
-		return (NULL);
-	if (g_interrupted)
+	// if (isatty(STDIN_FILENO))
+	// 	printf("%s", PROMPT);
+	line = readline(PROMPT);
+	if (!line || g_interrupt)
 		return (line);
-	full_line = ft_strdup(line);
+	full = ft_strdup(line);
 	free(line);
+	if (!full)
+		return (write(1, EOF_ERROR, 48) , NULL);
 	while (1)
 	{
-		idx = ft_strlen(full_line) - 1;
-		while (idx >= 0 && ft_isspace(full_line[idx]))
-			idx--;
-		if (idx == 0
-			|| (full_line[idx] != '|' && full_line[idx] != ';' && full_line[idx] != '&'))
-			return (full_line);
-		tmp = idx - 2;
-		while (tmp >= 0 && ft_isspace(line[tmp]))
-			tmp--;
-		if (tmp == 0)
-			return (full_line);
-		if ((full_line[idx - 1] == '|' && full_line[idx] == '|')
-			|| (full_line[idx] == '&' && full_line[idx - 1] == '&')
-			|| full_line[idx] == ';' || full_line[idx] == '|')
-		{
-			line = readline("> ");
-			if (!line)
-			{
-				fprintf(stderr, "minishell: syntax error: unexpected end of file\n");
-				return (free(full_line), NULL);
-			}
-			if (g_interrupted)
-				return (free(line), full_line);
-		}
-		else
-			return (full_line);
-		full_line = ft_strjoin(full_line, line);
-		free(line);
-		if (!full_line)
-			return (fprintf(stderr, "minishell: malloc error\n"), NULL);
+		idx = is_line_atend(full);
+		if (idx == 0)
+			return (full);
+		// if (isatty(STDIN_FILENO))
+		// 	printf("> ");
+		line = readline("> ");
+		if (!line)
+			return (write(1, EOF_ERROR, 48), free(full), NULL);
+		if (g_interrupt)
+			return (free(line), full);
+		full = append_line(full, line);
+		if (!full)
+			return (write(1, M_ERROR, 24), NULL);
 	}
+}
+
+static int	is_line_atend(char *full)
+{
+	int	idx;
+	int	tmp;
+
+	idx = ft_strlen(full) - 1;
+	while (idx >= 0 && ft_isspace(full[idx]))
+		idx--;
+	tmp = idx - 2;
+	while (tmp >= 0 && ft_isspace(full[tmp]))
+		tmp--;
+	if (tmp <= 0 || idx < 0)
+		return (0);
+	if ((full[idx] == '|' && idx > 0 && full[idx - 1] == '|') ||
+		(full[idx] == '&' && idx > 0 && full[idx - 1] == '&'))
+		return (idx);
+	if (full[idx] == '|' || full[idx] == ';')
+		return (idx);
+	return (0);
+}
+static char	*append_line(char *full, char *line)
+{
+	char	*new;
+
+	new = ft_strjoin(full, line);
+	free(full);
+	free(line);
+	return (new);
 }

@@ -14,6 +14,7 @@
 
 int	main(int ac, char **av)
 {
+	(void)av;
 	if (ac == 1)
 		return (repl());
 	return (0);

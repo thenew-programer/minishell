@@ -11,31 +11,30 @@
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
-# define MINISHELL_H
+#define MINISHELL_H
 
-# include "parser/parser.h"
-# include "scanner/scanner.h"
-# include "executor/exec.h"
-# include "libft.h"
+#include "executor/exec.h"
+#include "libft.h"
+#include "parser/parser.h"
+#include "scanner/scanner.h"
 
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <signal.h>
-# include <stdio.h>
+#include <sys/ioctl.h>
+#include <readline/history.h>
+#include <readline/readline.h>
+#include <signal.h>
+#include <stdio.h>
 
-# define PROMPT	" $> "
+#define PROMPT "--% "
 
-extern sig_atomic_t	g_interrupt;
-
-typedef struct s_shell
-{
-	int	lstatus;
-}	t_shell;
+extern sig_atomic_t g_interrupt;
 
 /* prompt.c */
-char	*prompt(char *p);
+char	*prompt(void);
 
 /* init.c */
 void	init(void);
+
+/* rppl.c */
+int 	repl(void);
 
 #endif /* MINISHELL_H */
