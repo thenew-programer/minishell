@@ -16,13 +16,7 @@ t_ast_node	*parse_command(t_parser *parser)
 {
 	t_ast_node	*command;
 
-	if (parser->curr.type == TOKEN_WORD
-		|| parser->curr.type == TOKEN_DQ_WORD
-		|| parser->curr.type == TOKEN_SQ_WORD
-		|| parser->curr.type == TOKEN_REDIR_IN
-		|| parser->curr.type == TOKEN_REDIR_OUT
-		|| parser->curr.type == TOKEN_APPEND_OUT
-		|| parser->curr.type == TOKEN_HEREDOC)
+	if (is_word(parser->curr.type) || is_redir(parser->curr.type))
 	{
 		command = parse_cmd(parser);
 		if (!command)
@@ -37,4 +31,12 @@ t_ast_node	*parse_command(t_parser *parser)
 	else
 		return (make_error(parser, "", 2), NULL);
 	return (command);
+}
+
+int	is_word(t_token_type type)
+{
+	if (type == TOKEN_WORD || type == TOKEN_DQ_WORD
+		|| type == TOKEN_SQ_WORD)
+		return (1);
+	return (0);
 }

@@ -33,15 +33,13 @@ t_ast_node	*parse_cmd(t_parser *parser)
 	cmd = new_cmd();
 	if (!cmd)
 		return (NULL);
-	parse_redir(&cmd->redir, parser);
+	while (is_redir(parser->curr.type))
+		parse_redir(&cmd->redir, parser);
 	cmd->name = parse_word(parser);
-	while ((parser->curr.type == TOKEN_WORD
-			|| parser->curr.type == TOKEN_DQ_WORD
-			|| parser->curr.type == TOKEN_SQ_WORD
-			|| parser->curr.type == TOKEN_REDIR_IN
-			|| parser->curr.type == TOKEN_REDIR_OUT
-			|| parser->curr.type == TOKEN_APPEND_OUT
-			|| parser->curr.type == TOKEN_HEREDOC)
+	if (!cmd->name && !is_word(parser->curr.type)
+		&& !is_redir(parser->curr.type))
+		make_error(parser, "", 2);
+	while ((is_word(parser->curr.type) || is_redir(parser->curr.type))
 		&& !parser->has_error)
 	{
 		parse_redir(&cmd->redir, parser);

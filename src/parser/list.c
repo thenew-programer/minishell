@@ -16,18 +16,6 @@
 
 static t_ast_node	*extend_commands(t_ast_node *list);
 
-void	free_node_list(t_ast_node *node)
-{
-	int	i;
-
-	if (!node->u_content.s_list.commands)
-		return ;
-	i = 0;
-	while (i < node->u_content.s_list.count)
-		free_ast_node(node->u_content.s_list.commands[i++]);
-	free(node->u_content.s_list.commands);
-}
-
 t_ast_node	*parse_list(t_parser *parser)
 {
 	t_ast_node	*node;
@@ -53,6 +41,18 @@ t_ast_node	*parse_list(t_parser *parser)
 		list->u_content.s_list.commands[list->u_content.s_list.count++] = node;
 	}
 	return (list);
+}
+
+void	free_node_list(t_ast_node *node)
+{
+	int	i;
+
+	if (!node->u_content.s_list.commands)
+		return ;
+	i = 0;
+	while (i < node->u_content.s_list.count)
+		free_ast_node(node->u_content.s_list.commands[i++]);
+	free(node->u_content.s_list.commands);
 }
 
 static t_ast_node	*extend_commands(t_ast_node *node)

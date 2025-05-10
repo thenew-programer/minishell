@@ -81,6 +81,7 @@ static t_ast_node	*init_ast(t_ast_node *node, t_node_type type)
 	return (node);
 }
 
+/*
 static char	*stringfy_node_type(t_node_type type)
 {
 	if (type == NODE_AND)
@@ -167,3 +168,4 @@ void	print_ast(t_ast_node *root, const char *prefix, bool is_last)
 	else if (root->type == NODE_BACKGROUND)
 		print_ast(root->u_content.s_background.cmd, new_prefix, true);
 }
+*/

@@ -15,7 +15,6 @@
 static t_word	*parse_dqword(t_parser *parser);
 static t_word	*parse_sqword(t_parser *parser);
 
-
 t_word	*new_word(char *str, int flag)
 {
 	t_word	*word;
@@ -86,5 +85,4 @@ static t_word	*parse_sqword(t_parser *parser)
 		return (make_error(parser, "ressource error", 1), NULL);
 	parser_advance(parser);
 	return (new_word(str, TOKEN_SQ_WORD));
-
 }

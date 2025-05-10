@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "parser.h"
+#include "parser.h"
 
 void	init_parser(t_parser *parser, t_scanner *scanner)
 {
@@ -46,7 +46,8 @@ t_ast_node	*parse(const char *src, int *status)
 	init_scanner(&scanner, src);
 	init_parser(&parser, &scanner);
 	ast = parse_list(&parser);
-	if (parser.has_error) {
+	if (parser.has_error)
+	{
 		print_error(&parser);
 		*status = parser.error.code;
 		return (free_ast_node(ast), NULL);

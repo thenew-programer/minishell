@@ -17,7 +17,7 @@ t_ast_node	*parse_logical(t_parser *parser)
 	t_ast_node	*left;
 	t_ast_node	*right;
 	t_ast_node	*logical;
-	t_node_type type;
+	t_node_type	type;
 
 	left = parse_pipeline(parser);
 	if (!left)
@@ -25,11 +25,9 @@ t_ast_node	*parse_logical(t_parser *parser)
 	while (parser_match(parser, TOKEN_AND_AND)
 		|| parser_match(parser, TOKEN_OR))
 	{
-		if (parser->curr.type == TOKEN_EOF)
+		if (parser->curr.type == TOKEN_EOF || parser->curr.type == TOKEN_ERROR)
 			return (make_error(parser, "", 2), left);
-		type = NODE_OR;
-		if (parser->prev.type == TOKEN_AND_AND)
-			type = NODE_AND;
+		type = (t_node_type)parser->prev.type;
 		right = parse_pipeline(parser);
 		if (!right)
 			return (free_ast_node(left), NULL);

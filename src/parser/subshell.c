@@ -34,11 +34,8 @@ t_ast_node	*parse_subshell(t_parser *parser)
 		return (free_ast_node(list), NULL);
 	subshell->u_content.subshell = list;
 	redir_list = NULL;
-	while (parser->curr.type == TOKEN_REDIR_IN
-			|| parser->curr.type == TOKEN_REDIR_OUT
-			|| parser->curr.type == TOKEN_APPEND_OUT
-			|| parser->curr.type == TOKEN_HEREDOC)
-		redir_list =  parse_redir(&redir_list, parser);
+	while (is_redir(parser->curr.type))
+		redir_list = parse_redir(&redir_list, parser);
 	subshell->redir = redir_list;
 	return (subshell);
 }

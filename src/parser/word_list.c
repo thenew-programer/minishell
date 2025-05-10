@@ -45,7 +45,8 @@ void	free_word_list(t_word_list *head)
 	if (!head)
 		return ;
 	curr = head;
-	while (curr) {
+	while (curr)
+	{
 		next = curr->next;
 		free_word(curr->word);
 		free(curr);

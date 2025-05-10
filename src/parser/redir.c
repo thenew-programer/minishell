@@ -44,16 +44,11 @@ t_redir_list	*parse_redir(t_redir_list **list, t_parser *parser)
 	t_word			*filename;
 	t_redir_list	*new;
 
-	if (parser->curr.type == TOKEN_REDIR_IN
-		|| parser->curr.type == TOKEN_REDIR_OUT
-		|| parser->curr.type == TOKEN_APPEND_OUT
-		|| parser->curr.type == TOKEN_HEREDOC)
+	if (is_redir(parser->curr.type))
 	{
 		type = (t_redir_type)parser->curr.type;
 		parser_advance(parser);
-		if (parser->curr.type == TOKEN_WORD
-			|| parser->curr.type == TOKEN_SQ_WORD
-			|| parser->curr.type == TOKEN_DQ_WORD)
+		if (is_word(parser->curr.type))
 		{
 			filename = parse_word(parser);
 			if (!filename)
@@ -82,4 +77,12 @@ void	free_redir_list(t_redir_list *list)
 		free(list);
 		list = next;
 	}
+}
+
+int	is_redir(t_token_type type)
+{
+	if (type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT
+		|| type == TOKEN_APPEND_OUT || type == TOKEN_HEREDOC)
+		return (1);
+	return (0);
 }

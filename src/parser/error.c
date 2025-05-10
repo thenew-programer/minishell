@@ -25,7 +25,10 @@ void	make_error(t_parser *parser, const char *msg, int code)
 void	print_error(t_parser *parser)
 {
 	if (parser->curr.type == TOKEN_EOF)
-		fprintf(stderr, "minishell: syntax error near unexpected token `newline'\n");
+		fprintf(stderr, "minishell: syntax error "
+			"near unexpected token `newline'\n");
 	else
-		fprintf(stderr, "minishell: syntax error near unexpected token `%.*s'\n", parser->curr.len, parser->curr.start);
+		fprintf(stderr, "minishell: syntax error "
+			"near unexpected token `%.*s'\n",
+			parser->curr.len, parser->curr.start);
 }
