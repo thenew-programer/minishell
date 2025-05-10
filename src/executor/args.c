@@ -29,6 +29,8 @@ char	**prepare_args(t_executor *executor, t_cmd *cmd)
 		return (NULL);
 	buf_idx = 0;
 	args[buf_idx++] = expand_var(executor, cmd->name);
+	if (!cmd->name)
+		return (args);
 	list = cmd->args;
 	while (list)
 	{
@@ -58,6 +60,9 @@ static char	*get_next_token(t_executor *executor, char *str, int *idx)
 {
 	int		start;
 	int		var_start;
+	char	*key;
+	char	*value;
+	char	*tmp;
 
 	start = *idx;
 	if (str[*idx] == '$')
@@ -66,7 +71,10 @@ static char	*get_next_token(t_executor *executor, char *str, int *idx)
 		var_start = *idx;
 		while (ft_isalnum(str[*idx]) || str[*idx] == '_')
 			(*idx)++;
-		return (get_env_value(executor->env, str + var_start, *idx - var_start));
+		tmp = ft_strndup(str + var_start, *idx - var_start);
+		key = ft_strjoin(tmp, "=");
+		value = get_env(executor->env, key);
+		return (free(tmp), free(key), value);
 	}
 	while (str[*idx] && str[*idx] != '$')
 		(*idx)++;
@@ -80,6 +88,8 @@ static char	*expand_var(t_executor *executor, t_word *arg)
 	char	*tmp;
 	int		i;
 
+	if (!arg)
+		return (NULL);
 	if (arg->flag != TOKEN_DQ_WORD)
 		return (ft_strdup(arg->str));
 	else if (!ft_strchr(arg->str, '$'))
@@ -96,7 +106,7 @@ static char	*expand_var(t_executor *executor, t_word *arg)
 		tmp = result;
 		result = ft_strjoin(result, token);
 		free(tmp);
-		// free(token);
+		free(token);
 		if (!result)
 			return (NULL);
 	}

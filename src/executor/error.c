@@ -41,8 +41,5 @@ int	set_error(t_executor *executor, int status)
 	if (status == FORK_ERROR)
 		return (make_exec_error(executor, "fork() failed", FORK_ERROR),
 			FORK_ERROR);
-	if (status == OPEN_ERROR)
-		return (make_exec_error(executor, "open() failed", OPEN_ERROR),
-			OPEN_ERROR);
 	return (0);
 }

@@ -79,5 +79,7 @@ static int	open_file(char *filename, t_redir_type type)
 		fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else
 		fd = -1;
+	if (errno == ENOENT)
+		fprintf(stderr, "minishell: %s: %s\n", filename, strerror(errno));
 	return (fd);
 }

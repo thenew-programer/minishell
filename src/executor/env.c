@@ -12,185 +12,150 @@
 
 #include "env.h"
 
-static t_env_list	*append_env(t_env_list *env_list, t_env_list *new_env_list);
-static t_env_list	*new_env_list(char *env);
-static void			free_env_var(t_env *env_var);
-t_env				*prepare_env_var(char *env_var);
-t_env				*get_env(t_env_list *list, char *name);
-int					set_env(t_env_list *list, char *env_var);
+static size_t	copy_env(char **env, size_t len);
 
-char	*get_env_value(t_env_list *env, char *str, int len)
+t_env	*new_env(t_env *env)
 {
-	t_env	*entry;
-	char	*key;
+	size_t		len;
 
-	key = ft_strndup(str, len);
-	if (!key)
-		return (ft_strdup(""));
-	entry = get_env(env, key);
-	free(key);
-	if (!entry || !entry->value)
-		return (ft_strdup(""));
-	return (ft_strdup(entry->value));
+	len = -1;
+	while (environ[++len]);
+	env->capacity = len * 2;
+	env->env = ft_calloc(sizeof(char *), env->capacity);
+	if (!env->env)
+		return (env->env = NULL, env);
+	env->count = copy_env(env->env, len);
+	if (env->count == 0)
+	{
+		free(env->env);
+		env->env = NULL;
+	}
+	return (env);
 }
 
-int	set_env(t_env_list *list, char *env_var)
+static size_t	copy_env(char **env, size_t len)
 {
-	t_env_list	*env_elm;
-	t_env		*tmp;
+	size_t	i;
 
-	tmp = get_env(list, env_var);
-	if (!tmp)
+	i = -1;
+	while (++i < len)
 	{
-		env_elm = new_env_list(env_var);
-		if (!env_elm)
-			return (-1);
-		list = append_env(list, env_elm);
+		env[i] = ft_strdup(environ[i]);
+		if (!env[i])
+			break ;
 	}
-	else
+	if (i == len)
+		return (env[i] = NULL, i);
+	while (i > 0)
 	{
-		while (list)
-		{
-			if (ft_strncmp(list->var->name, tmp->name, ft_strlen(tmp->name) + 1))
-			{
-				tmp = prepare_env_var(env_var);
-				free_env_var(list->var);
-				list->var = tmp;
-				break ; 
-			}
-			list = list->next;
-		}
+		free(env[i--]);
+		if (i == 0)
+			return (free(env[i]), 0);
 	}
 	return (0);
 }
 
-t_env	*get_env(t_env_list *list, char *name)
+char	*get_env(t_env *env, char *name)
 {
-	while (list)
-	{
-		if (ft_strncmp(list->var->name, name, ft_strlen(list->var->name)) == 0)
-			return (list->var);
-		list = list->next;
-	}
-	return (NULL);
+	size_t	i;
+	size_t		name_len;
+	char	*value;
+
+	if (!name || !*name || !ft_strchr(name, '='))
+		return (ft_strdup(""));
+	name_len = ft_strlen(name);
+	i = -1;
+	while (++i < env->count)
+		if (ft_strncmp(env->env[i], name, name_len) == 0)
+			break ;
+	if (!env->env[i])
+		return (ft_strdup(""));
+	value = ft_strdup(env->env[i] + name_len);
+	if (!value)
+		return (ft_strdup(""));
+	return (value);
 }
 
-t_env_list	*env(void)
+int	set_env(t_env *env, char *name, char *value)
 {
-	t_env_list	*env_list;
-	t_env_list	*tmp;
-	int			i;
+	size_t		i;
+	char	**new_env;
 
-	i = 0;
-	env_list = NULL;
-	while (environ[i])
+	if (!ft_strchr(name, '='))
+		return (1);
+	if (env->count >= env->capacity)
 	{
-		tmp = new_env_list(environ[i]);
-		if (!tmp)
-			return (free_env_list(env_list), NULL);
-		env_list = append_env(env_list, tmp);
+		new_env = malloc(sizeof(char *) * (env->capacity * 2));
+		if (!new_env)
+			return (1);
+		i = -1;
+		while (++i <= env->count)
+			new_env[i] = env->env[i];
+		free(env->env);
+		env->env = new_env;
+	}
+	env->env[env->count++] = ft_strjoin(name, value);
+	return (0);
+}
+
+int	unset_env(t_env *env, char *name)
+{
+	size_t	name_len;
+	size_t	i;
+
+	if (!name)
+		return (1);
+	name_len = ft_strlen(name);
+	i = -1;
+	while (++i < env->count)
+		if (ft_strncmp(env->env[i], name, name_len) == 0)
+			break ;
+	if (i >= env->count)
+		return (1);
+	free(env->env[i]);
+	while (i < env->count)
+	{
+		env->env[i] = env->env[i + 1];
 		i++;
 	}
-	return (env_list);
+	env->count--;
+	return (0);
 }
 
-
-static t_env_list	*append_env(t_env_list *env_list, t_env_list *new_env_list)
+void	free_env(t_env *env)
 {
-	t_env_list	*curr;
+	size_t	i;
 
-	if (NULL == env_list)
-		return (new_env_list);
-	curr = env_list;
-	while (curr->next != NULL)
-		curr = curr->next;
-	curr->next = new_env_list;
-	return (env_list);
-}
-
-t_env	*prepare_env_var(char *env_var)
-{
-	t_env	*env_elm;
-	char	*name;
-	char	*value;
-	int		l;
-
-	if (!env_var)
-		return (NULL);
-	env_elm = malloc(sizeof(t_env));
-	if (!env_elm)
-		return (NULL);
-	l = 0;
-	while (env_var[l] != '=' && env_var[l] != '\0')
-		l++;
-	name = ft_strndup(env_var, l);
-	if (!name)
-		return (free(env_elm), NULL);
-	value = ft_strdup(env_var + l + 1);
-	if (!value)
-		return (free(env_elm), free(name), NULL);
-	env_elm->name = name;
-	env_elm->value = value;
-	return (env_elm);
-}
-
-static t_env_list	*new_env_list(char *env_var)
-{
-	t_env_list	*env_list;
-
-	env_list = malloc(sizeof(t_env_list));
-	if (!env_list)
-		return (NULL);
-	env_list->var = prepare_env_var(env_var);
-	if (!env_list->var)
-		return (free(env_list), NULL);
-	env_list->next = NULL;
-	return (env_list);
-}
-
-static void	free_env_var(t_env *env_var)
-{
-	if (!env_var)
-		return ;
-	free(env_var->name);
-	free(env_var->value);
-	free(env_var);
-}
-
-void	free_env_list(t_env_list *list)
-{
-	t_env_list	*next;
-
-	if (!list)
-		return ;
-	while (list)
-	{
-		next = list->next;
-		free_env_var(list->var);
-		free(list);
-		list = next;
-	}
+	i = -1;
+	while (++i < env->count)
+		free(env->env[i]);
+	free(env->env);
+	env->capacity = 0;
+	env->count = 0;
 }
 
 /*
-static void	print_env_list(t_env_list *list)
+int	main()
 {
-	int	i;
+	t_env env;
+	new_env(&env);
+	if (!env.env)
+		return (prsize_tf("malloc failed\n"), 0);
+	for (size_t i = 0; i < env.count; i++)
+		prsize_tf("[%d] %s\n", i, env.env[i]);
 
-	i = 0;
-	while (list)
-	{
-		printf("[%d] %s = %s\n", i, list->var->name, list->var->value);
-		list = list->next;
-		i++;
-	}
-}
-
-int	main(void)
-{
-	t_env_list	*list;
-
-	list = env();
-	print_env_list(list);
+	char *value = get_env(&env, "HOME=");
+	free(value);
+	prsize_tf("get_env('HOME') = %s\n", value);
+	size_t ret = set_env(&env, "jos=", "Youssef");
+	prsize_tf("set_env('jos=', 'Youssef') = %s\n", ret ? "False": "True");
+	for (size_t i = 0; i < env.count; i++)
+		prsize_tf("[%d] %s\n", i, env.env[i]);
+	ret = unset_env(&env, "jos=");
+	prsize_tf("unset_env('jos=') = %s\n", ret ? "False": "True");
+	for (size_t i = 0; i < env.count; i++)
+		prsize_tf("[%d] %s\n", i, env.env[i]);
+	free_env(&env);
+	return (0);
 }
 */

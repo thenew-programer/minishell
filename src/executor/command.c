@@ -6,11 +6,12 @@
 /*   By: ybouryal <ybouryal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 18:07:19 by ybouryal          #+#    #+#             */
-/*   Updated: 2025/05/03 14:30:13 by ybouryal         ###   ########.fr       */
+/*   Updated: 2025/05/10 09:00:52 by ybouryal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
+#include <string.h>
 
 int	exec_command(t_executor *executor, t_cmd *cmd, t_ctx *ctx)
 {
@@ -29,7 +30,9 @@ int	exec_command(t_executor *executor, t_cmd *cmd, t_ctx *ctx)
 		int ret = apply_redirections(cmd->redir, ctx);
 		if (ret != 0)
 			exit(ret);
-		execvp(cmd->name->str, args);
+		if (!cmd->name)
+			exit(0);
+		execve(resolve_path(executor, cmd->name->str), args, executor->env->env);
 		err = "command not found";
 		if (errno != ENOENT)
 			err = strerror(errno);

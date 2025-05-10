@@ -10,12 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "env.h"
 #include "exec.h"
 
 int	exec_subshell(t_executor *executor, t_ast_node *node, t_ctx *ctx)
 {
 	int			status;
-	t_env_list	*env_list;
+	t_env		env;
 	t_ctx		s_ctx;
 	int			pid;
 
@@ -26,9 +27,9 @@ int	exec_subshell(t_executor *executor, t_ast_node *node, t_ctx *ctx)
 	{
 		s_ctx = *ctx;
 		apply_redirections(node->redir, &s_ctx);
-		env_list = env();
-		status = exec(node->u_content.subshell, env_list);
-		free_env_list(env_list);
+		new_env(&env);
+		status = exec(node->u_content.subshell, &env);
+		free_env(&env);
 		exit(status);
 	}
 	waitpid(pid, &status, 0);

@@ -12,10 +12,10 @@
 
 #include "exec.h"
 
-static void	init_executor(t_executor *executor, t_env_list *env);
+static void	init_executor(t_executor *executor, t_env *env);
 static void	free_executor(t_executor *executor);
 
-int	exec(t_ast_node *ast, t_env_list *env)
+int	exec(t_ast_node *ast, t_env *env)
 {
 	t_executor	executor;
 	int			status;
@@ -62,7 +62,7 @@ int	exec_node(t_executor *executor, t_ast_node *node, t_ctx *ctx)
 	return (status);
 }
 
-static void	init_executor(t_executor *executor, t_env_list *env)
+static void	init_executor(t_executor *executor, t_env *env)
 {
 	executor->has_error = 0;
 	executor->childs = malloc(sizeof(int) * MAX_CHILDS);

@@ -19,21 +19,17 @@ extern char **environ;
 
 typedef struct s_env
 {
-	char	*name;
-	char	*value;
+	char	**env;
+	size_t	count;
+	size_t	capacity;
 }	t_env;
 
-typedef struct s_env_list
-{
-	t_env				*var;
-	struct s_env_list	*next;
-}	t_env_list;
 
 /* env.c */
-char		*get_env_value(t_env_list *env, char *str, int len);
-int			set_env(t_env_list *list, char *env_var);
-t_env		*get_env(t_env_list *list, char *name);
-void		free_env_list(t_env_list *list);
-t_env_list	*env(void);
+t_env	*new_env(t_env *env);
+char	*get_env(t_env *env, char *name);
+int		set_env(t_env *env, char *name, char *value);
+int		unset_env(t_env *env, char *name);
+void	free_env(t_env *env);
 
 #endif /* ENV_H */
